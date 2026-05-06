@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Phone LED Sign Maker — Scrolling Text Display | MooduTools</title>
+  <meta name="description" content="Turn your phone into a scrolling LED sign instantly. Free online LED signboard maker with custom colors, fonts, speeds. No app needed — works in your browser.">
+  <link rel="canonical" href="https://moodutools.com/tool/led-sign.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8031004347843172" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "MooduTools LED Sign Maker",
+    "url": "https://moodutools.com/tool/led-sign.html",
+    "description": "Free online tool to turn your phone into a scrolling LED sign with customizable colors, fonts, and scroll speeds.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires a modern web browser"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is this LED sign maker really free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. No sign-up, no download, no hidden fees. It runs entirely in your browser." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does it work on both iPhone and Android?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. It works on any device with a modern web browser — iPhone, Android, iPad, tablets, and desktop computers." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use it without internet?",
+        "acceptedAnswer": { "@type": "Answer", "text": "You need internet to load the page initially, but once loaded, the LED sign works without a connection." }
+      },
+      {
+        "@type": "Question",
+        "name": "Will my phone screen stay on during use?",
+        "acceptedAnswer": { "@type": "Answer", "text": "In fullscreen mode, most browsers keep the screen active. For best results, adjust your phone's auto-lock setting to 'Never' before using the sign." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I make the text bigger?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Use the font size slider in the controls panel. For maximum visibility, use fullscreen mode and set the font size to its highest value." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-logo">Moodu<span>Tools</span></a>
+      <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/tool/led-sign.html" class="active">LED Sign</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <div class="tool-page">
+
+      <h1 style="font-family:'Outfit',sans-serif;font-size:clamp(28px,4vw,40px);font-weight:800;text-align:center;margin-bottom:8px;">Phone LED Sign Maker</h1>
+      <p style="text-align:center;color:var(--color-text-secondary);margin-bottom:36px;font-size:17px;">Type your message, customize the look, and turn your phone into a glowing LED sign. Free, no app needed.</p>
+
+      <!-- Tool App -->
+      <div class="tool-app">
+        <div class="tool-screen" id="ledScreen">
+          <button class="tool-fullscreen-btn" onclick="goFullscreen()" title="Fullscreen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+          <div class="led-text" id="ledText" style="font-size:48px;color:#22D3EE;">Hello World!</div>
+        </div>
+        <div class="tool-controls">
+          <div class="tool-control-group full-width">
+            <label for="msgInput">Your Message</label>
+            <input type="text" id="msgInput" value="Hello World!" placeholder="Type your message here..." maxlength="200">
+          </div>
+          <div class="tool-control-group">
+            <label>Text Color</label>
+            <div class="color-row" id="colorPicker">
+              <div class="color-swatch active" style="background:#22D3EE" data-color="#22D3EE"></div>
+              <div class="color-swatch" style="background:#F43F5E" data-color="#F43F5E"></div>
+              <div class="color-swatch" style="background:#22C55E" data-color="#22C55E"></div>
+              <div class="color-swatch" style="background:#FACC15" data-color="#FACC15"></div>
+              <div class="color-swatch" style="background:#A855F7" data-color="#A855F7"></div>
+              <div class="color-swatch" style="background:#FF6B35" data-color="#FF6B35"></div>
+              <div class="color-swatch" style="background:#FFFFFF" data-color="#FFFFFF"></div>
+            </div>
+          </div>
+          <div class="tool-control-group">
+            <label>Background</label>
+            <div class="color-row" id="bgPicker">
+              <div class="color-swatch active" style="background:#0F0F0F;border:2px solid #333" data-color="#0F0F0F"></div>
+              <div class="color-swatch" style="background:#1E3A5F" data-color="#1E3A5F"></div>
+              <div class="color-swatch" style="background:#14532D" data-color="#14532D"></div>
+              <div class="color-swatch" style="background:#4C1D95" data-color="#4C1D95"></div>
+              <div class="color-swatch" style="background:#7F1D1D" data-color="#7F1D1D"></div>
+            </div>
+          </div>
+          <div class="tool-control-group">
+            <label for="speedRange">Scroll Speed</label>
+            <input type="range" id="speedRange" min="1" max="10" value="5">
+          </div>
+          <div class="tool-control-group">
+            <label for="sizeRange">Font Size</label>
+            <input type="range" id="sizeRange" min="24" max="120" value="48">
+          </div>
+          <button class="tool-btn" onclick="goFullscreen()">
+            &#9733; Go Fullscreen &mdash; Best for Events
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Below Tool -->
+      <div class="tool-content">
+
+        <section>
+          <h2>What Is the Phone LED Sign Maker?</h2>
+          <p>The MooduTools LED Sign Maker is a free browser-based tool that transforms your smartphone, tablet, or computer screen into a scrolling LED text display. Unlike physical LED signboards that can cost anywhere from $30 to several hundred dollars, this tool gives you the same eye-catching effect at zero cost.</p>
+          <p>The tool works entirely in your web browser. There is nothing to install, no accounts to create, and no personal data collected. Simply type your message, choose your colors and scroll speed, then tap fullscreen to turn your device into a bright, attention-grabbing sign.</p>
+          <p>Whether you are at a concert trying to catch an artist's attention, celebrating someone's birthday at a restaurant, running a market stall that needs signage, or cheering at a sports event, this tool creates clear, readable scrolling text that stands out in any environment.</p>
+        </section>
+
+        <section>
+          <h2>How to Use the LED Sign Maker</h2>
+          <h3>Step 1: Enter Your Message</h3>
+          <p>Type your text into the message field above. You can use any language, emoji, or special characters. Keep your message concise for best readability — shorter messages are easier to read as they scroll past.</p>
+          <h3>Step 2: Choose Your Colors</h3>
+          <p>Select a text color that contrasts well with the background. Cyan on black is the classic LED look, but red, green, and yellow are also highly visible. For outdoor events, bright colors like yellow and white work best against dark backgrounds.</p>
+          <h3>Step 3: Adjust Speed and Size</h3>
+          <p>Use the sliders to set how fast the text scrolls and how large it appears. For moving situations like concerts, slower speeds with larger text are easier to read. For stationary displays like counter signs, faster speeds keep things dynamic.</p>
+          <h3>Step 4: Go Fullscreen</h3>
+          <p>Tap the fullscreen button to maximize the display. Turn your phone sideways (landscape mode) for the widest possible sign. The text will fill your entire screen, creating maximum visual impact.</p>
+        </section>
+
+        <section>
+          <h2>Best Use Cases</h2>
+          <ul>
+            <li><strong>Concerts &amp; Music Festivals</strong> — Display your favorite lyrics, request songs, or send messages to the artist on stage. Bright colors cut through dim lighting.</li>
+            <li><strong>Birthday Parties &amp; Celebrations</strong> — Create a personalized "Happy Birthday" sign without buying banners. Add the person's name for a special touch.</li>
+            <li><strong>Sports Events</strong> — Show team names, player numbers, or rally cries in your team's colors. Coordinate with fellow fans for maximum effect.</li>
+            <li><strong>Small Business &amp; Market Stalls</strong> — Display daily specials, prices, or welcome messages. A phone on a small stand becomes instant digital signage.</li>
+            <li><strong>Protests &amp; Rallies</strong> — Glowing text is visible even in low light and can be changed instantly as needed.</li>
+            <li><strong>Airport Pickups</strong> — Hold up your phone with the arriving person's name — cleaner and easier than a paper sign.</li>
+            <li><strong>Classroom &amp; Presentations</strong> — Teachers can display instructions, timers, or announcements on a spare device.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Tips for Maximum Visibility</h2>
+          <p>Getting the most out of your phone LED sign comes down to a few practical considerations. Set your phone brightness to maximum before going fullscreen. In outdoor or well-lit environments, choose high-contrast combinations: white or yellow text on pure black, or bright cyan on dark blue.</p>
+          <p>Turn off auto-lock on your device so the screen stays on continuously. On iPhone, go to Settings, then Display &amp; Brightness, then Auto-Lock, and set it to Never. On Android, look for Screen Timeout in Display settings.</p>
+          <p>For events where you will hold the phone up for extended periods, consider using a pop socket or phone grip to prevent fatigue. If you want a hands-free setup, a small phone stand or even a coffee cup can prop your device at the right angle.</p>
+        </section>
+
+        <section>
+          <h2>Frequently Asked Questions</h2>
+          <div class="faq-item">
+            <div class="faq-q">Is this LED sign maker really free?</div>
+            <div class="faq-a">Yes, completely free. No sign-up, no download, no hidden fees. It runs entirely in your browser using standard web technologies.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Does it work on both iPhone and Android?</div>
+            <div class="faq-a">Yes. It works on any device with a modern web browser — iPhone, Android, iPad, tablets, and desktop computers. No app installation is required.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Can I use it without internet?</div>
+            <div class="faq-a">You need internet to load the page initially, but once loaded, the LED sign continues to work even if you lose your connection. All processing happens on your device.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Will my phone screen stay on during use?</div>
+            <div class="faq-a">In fullscreen mode, most browsers keep the screen active. For best results, adjust your phone's auto-lock setting to "Never" before using the sign.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">How do I make the text bigger?</div>
+            <div class="faq-a">Use the Font Size slider in the controls panel. For maximum visibility, enter fullscreen mode and set the font size to its highest value. Rotating your phone to landscape orientation also helps.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Is my data collected?</div>
+            <div class="faq-a">No. Everything runs locally on your device. Your messages are never sent to any server, and no personal data is collected or stored.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q">Can I save my settings?</div>
+            <div class="faq-a">Currently, the tool does not save settings between sessions. Bookmark the page for quick access, and your preferred settings can be re-entered in seconds.</div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Related Articles</h2>
+          <div class="blog-grid">
+            <a href="/blog/complete-guide-phone-led-sign.html" class="blog-card">
+              <div class="blog-card-body">
+                <span class="blog-card-tag">Guide</span>
+                <h3>The Complete Guide to Using Your Phone as an LED Sign</h3>
+                <p>Everything you need to know about phone-based LED signs, from basic setup to advanced tips.</p>
+              </div>
+            </a>
+            <a href="/blog/concert-led-sign-ideas.html" class="blog-card">
+              <div class="blog-card-body">
+                <span class="blog-card-tag">Ideas</span>
+                <h3>25 Best Concert LED Sign Ideas That Get Noticed</h3>
+                <p>Creative messages and display techniques for concerts and festivals.</p>
+              </div>
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Moodu<span>Tools</span></div>
+        <p class="footer-desc">Free digital tools to set the mood. Create stunning LED signs, scrolling text displays, and more — all from your browser.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Tools</h4>
+        <a href="/tool/led-sign.html">LED Sign Maker</a>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="/blog/">Blog</a>
+        <a href="/blog/complete-guide-phone-led-sign.html">LED Sign Guide</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2025 MooduTools. All rights reserved.</div>
+  </footer>
+
+  <script src="../js/led-sign.js"></script>
+</body>
+</html>
