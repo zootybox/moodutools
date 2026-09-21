@@ -165,6 +165,17 @@
     }
     .free-banner b{color:var(--accent)}
 
+    /* ── Toast notification ── */
+    .toast{
+      position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(40px);
+      background:var(--surface);color:var(--text);max-width:560px;padding:14px 18px;border-radius:12px;
+      border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;
+      transition:transform .25s ease,opacity .25s ease;font-size:14px;line-height:1.5;z-index:999;
+    }
+    .toast.error{border-color:rgba(244,63,94,.6);background:rgba(244,63,94,.12);color:#ffb3c7}
+    .toast.info{border-color:var(--accent);background:rgba(34,211,238,.08)}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
     @media(max-width:760px){.steps{grid-template-columns:1fr}}
   </style>
 <body>
@@ -307,6 +318,10 @@
     var currentSource = ''; // 'ai' | 'demo' | ''
     var DEMO_KEYS = ['joyful', 'melancholic', 'chaotic'];
 
+    // Race-condition guard & toast timer
+    var isBusy = false;
+    var toastTimer = null;
+
     function wireUI(){
       input    = document.getElementById('moodInput');
       goBtn    = document.getElementById('generateBtn');
@@ -394,6 +409,7 @@
       }
     };
     function playDemo(key){
+      console.log('[MooduTools AI] playDemo("' + key + '") — Live Demo preset.');
       var d = DEMOS[key];
       if(!d) d = DEMOS[DEMO_KEYS[0]];
       ph.hidden = true;
@@ -411,31 +427,71 @@
     }
 
     function aiAvailable(){
-      return !!(window.ai && window.ai.languageModel &&
+      var avail = !!(window.ai && window.ai.languageModel &&
                 typeof window.ai.languageModel.create === 'function');
+      console.log('[MooduTools AI] aiAvailable →', avail);
+      return avail;
     }
 
     async function generate(overrideMood){
-      var mood = (overrideMood !== undefined) ? overrideMood : input.value.trim();
-      if(!mood){ setStatus('error', 'Please describe how you feel first.'); input.focus(); return; }
+      // [FIX root cause] Button clicks pass a DOM Event as overrideMood;
+      // recast() passes a string. Always coerce to a trimmed string so a
+      // stray Event object can never reach mood.slice().
+      var mood = (typeof overrideMood === 'string' && overrideMood.trim())
+        ? overrideMood.trim()
+        : input.value.trim();
+
+      console.log('[MooduTools AI] Connecting to Local Browser AI...', { mood: mood.slice(0,24), source: currentSource });
+
+      if(!mood){
+        console.warn('[MooduTools AI] Empty prompt.');
+        setStatus('error', 'Please describe how you feel first.');
+        input.focus();
+        return;
+      }
+
+      if(isBusy){ console.log('[MooduTools AI] Busy — ignoring repeat click.'); return; }
+      isBusy = true;
+      setBusy();
+
+      // [UX 1] Immediate visible state the very moment the user clicks.
+      setStatus('loading', '&#128260; Connecting to Local Browser AI&hellip;');
+      console.log('[MooduTools AI] Step 1 · Connecting...');
+
       if(!aiAvailable()){
+        console.error('[MooduTools AI] window.ai / languageModel unavailable.');
+        finishGenerate();
         setStatus('error',
           'This magic needs <strong>Chrome with Gemini Nano enabled</strong> (Settings &rarr; Advanced &rarr; Experimental AI). ' +
           'Meanwhile, tap a <strong>Live Demo</strong> vibe above to feel the magic right now.');
         return;
       }
+      console.log('[MooduTools AI] Gemini Nano available ✓');
 
-      // Kick off the "code being typed" skeleton, then run the AI.
-      var typing = showSkeleton('&ldquo;Casting a vibe for <b>' +
-        escapeHtml(mood.slice(0,48)) + (mood.length>48?'&hellip;':'') + '</b>&rdquo; &hellip;');
       reset();
 
+      // [UX 1] Stage 2 — model init / (first-time) download.
+      console.log('[MooduTools AI] Step 2 · Initializing Gemini Nano Model...');
+      setStatus('loading',
+        '<span class="spinner"></span>&#9203; Initializing Gemini Nano Model&hellip; ' +
+        '<span style="opacity:.75">(First-time setup may take a moment)</span>');
+
+      var typing = showSkeleton('&ldquo;Casting a vibe for <b>' +
+        escapeHtml(mood.slice(0,48)) + (mood.length>48?'&hellip;':'') + '</b>&rdquo; &hellip;');
+
+      // [REQ 2] Full try/catch/finally around the AI calls.
       try{
+        console.log('[MooduTools AI] Step 3 · Creating languageModel session...');
         var session = await window.ai.languageModel.create({
           systemPrompts: [SYSTEM_PROMPT],
           temperature: GEN.temperature,
           topK: GEN.topK
         });
+
+        // [UX 1] Stage 3 — actively coding.
+        console.log('[MooduTools AI] Step 4 · Session ready, sending prompt...');
+        setStatus('loading',
+          '<span class="spinner"></span>&#9889; AI is now coding your customized moving art&hellip;');
 
         var res = await session.prompt(
           'User\'s mood: "' + mood + '"\n\n' +
@@ -444,27 +500,35 @@
         );
         session.destroy();
 
-        await typing; // let the typing skeleton finish even if the response is instant
+        await typing; // let the typing skeleton finish even for instant responses
+
         var html = cleanOutput(res.text());
         if(!html){
+          console.warn('[MooduTools AI] Model returned no renderable HTML.');
+          toast('The AI returned no renderable code. Try rephrasing your mood.', 'info');
           setState('error', 'The AI returned no renderable code. Try rephrasing your mood.');
           return;
         }
 
+        console.log('[MooduTools AI] Step 5 · Art rendered OK.');
         renderArt(html);
         currentMood = mood;
         currentSource = 'ai';
         setState('done');
       }catch(err){
-        setState('error',
-          'Could not reach the in-browser AI: <strong>' +
-          escapeHtml(String((err && err.message) || err)) + '</strong>. ' +
-          'Make sure you are on a recent version of Chrome with Gemini Nano enabled.');
+        console.error('[MooduTools AI] ERROR during generation →', err);
+        toast('Chrome AI Model is still finalizing setup in your browser. Please try again in a few moments or use the \'Live Demo\' presets below.', 'error');
+        setStatus('error',
+          'Chrome AI Model is still finalizing setup in your browser. Please try again in a few moments or use the <strong>Live Demo</strong> presets below. ' +
+          '<span style="opacity:.7">(details: ' + escapeHtml(String((err && err.message) || err)) + ')</span>');
+      }finally{
+        finishGenerate();
       }
     }
 
     // Render an HTML art block and unlock the action bar for it.
     function renderArt(html){
+      console.log('[MooduTools AI] renderArt() — injecting HTML block.');
       ph.hidden = true;
       canvas.hidden = false;
       canvas.innerHTML = html;
@@ -540,6 +604,32 @@
     function escapeHtml(s){
       return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
               .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // [REQ 3] Disable the Create button while processing.
+    function setBusy(){
+      goBtn.disabled = true;
+      goBtn.textContent = 'Processing…';
+    }
+    function finishGenerate(){
+      isBusy = false;
+      goBtn.disabled = false;
+      goBtn.textContent = 'Create it →';
+    }
+
+    // [REQ 2] Styled toast/alert for errors & notices.
+    function toast(msg, type){
+      var el = document.getElementById('toast');
+      if(!el){
+        el = document.createElement('div');
+        el.id = 'toast';
+        el.className = 'toast';
+        document.body.appendChild(el);
+      }
+      el.className = 'toast ' + (type || 'info') + ' show';
+      el.textContent = msg;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 5200);
     }
 
     // Wire UI elements BEFORE attaching action listeners
