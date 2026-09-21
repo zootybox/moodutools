@@ -4,161 +4,685 @@
   <meta name="google-site-verification" content="Hv2Ig3ryGJ5pLcU0tszsWMk0PwMDARKQgal0IilTrYk" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MooduTools — Free Phone LED Signboard Maker & Digital Tools</title>
-  <meta name="description" content="Turn your phone into a scrolling LED sign. Free online LED signboard maker with custom colors, fonts, and speeds. Perfect for concerts, events, and business.">
+  <title>MooduTools — Turn Your Mood Into Living Art</title>
+  <meta name="description" content="Type how you feel and watch an in-browser AI (Gemini Nano) code a unique, moving piece of HTML/CSS animation art or an interactive micro-story — free, private, no app needed.">
   <link rel="canonical" href="https://moodutools.com/">
-  <link rel="stylesheet" href="css/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8031004347843172" crossorigin="anonymous"></script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "MooduTools",
-    "url": "https://moodutools.com",
-    "description": "Free online digital tools to set the mood. LED signboard maker, scrolling text generator, and more.",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://moodutools.com/blog/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0B0B10;--surface:#12121A;--surface-2:#181822;
+      --text:#EDEDF4;--muted:#8A8A9C;--line:#262633;
+      --accent:#22D3EE;--accent-2:#A855F7;--radius:16px;--maxw:1020px;
     }
-  }
-  </script>
-</head>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'DM Sans',system-ui,sans-serif;
+      background:radial-gradient(1200px 700px at 80% -10%,#1a1a2e 0%,var(--bg) 55%) fixed;
+      color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;
+    }
+    ::selection{background:rgba(34,211,238,.25)}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:24px}
+
+    header.site-header{
+      position:sticky;top:0;z-index:50;
+      background:rgba(11,11,16,.85);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+    }
+    .header-inner{display:flex}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.02em}
+    .site-logo span{color:var(--accent)}
+
+    .hero{text-align:center}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;
+      background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);
+      color:#c892ff;font-size:13px;font-weight:600;
+    }
+    .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-2);animation:ping 2s infinite}
+    @keyframes ping{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.6)}50%{box-shadow:0 0 0 6px rgba(168,85,247,0)}}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:clamp(30px,5vw,52px);font-weight:800;line-height:1.05;margin:20px 0 8px}
+    .hero h1 .grad{
+      background:linear-gradient(90deg,var(--accent),#7c7cff,var(--accent-2));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero p{color:var(--muted);font-size:17px;max-width:640px;margin:0 auto}
+    .hero .privacy{font-size:13px;color:var(--muted);margin-top:6px}
+
+    .prompt-bar{
+      margin:26px auto;max-width:720px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+      background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+    }
+    .prompt-bar input{
+      flex:1;min-width:0;background:transparent;border:none;outline:none;color:var(--text);
+      font-size:16px;padding:10px 0;font-family:'DM Sans',sans-serif;
+    }
+    .prompt-bar input::placeholder{color:var(--muted)}
+    .prompt-bar .go{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;
+      border:none;border-radius:10px;padding:11px 22px;font-size:15px;font-weight:700;cursor:pointer;
+      box-shadow:0 4px 16px rgba(34,211,238,.25);transition:transform .12s ease;
+    }
+    .prompt-bar .go:hover{transform:translateY(-1px)}
+    .examples{text-align:center;margin-top:10px}
+    .examples .chip{
+      display:inline-flex;align-items:center;gap:6px;padding:7px 14px;margin:0 4px;border-radius:999px;cursor:pointer;
+      background:var(--surface-2);border:1px solid var(--line);color:var(--muted);font-size:13px;transition:border-color .15s;
+    }
+    .examples .chip:hover{border-color:var(--accent);color:var(--text)}
+  </style>
+  <style>
+    .status{display:none;max-width:720px;margin:0 auto;padding:14px 18px;border-radius:12px;border:1px solid var(--line)}
+    .status.loading{border-color:rgba(34,211,238,.4);background:var(--surface)}
+    .status.error{border-color:rgba(244,63,94,.5);background:rgba(244,63,94,.08);color:#ff8fae}
+    .status.info{background:var(--surface)}
+    .spinner{width:16px;height:16px;border:2px solid rgba(168,85,247,.3);border-top-color:var(--accent-2);border-radius:50%;animation:spin .8s linear infinite;margin-right:12px;flex:0 0 auto}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .status[hidden]{display:none}
+
+    .canvas-wrap{
+      background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+      min-height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+    }
+    .canvas-wrap .placeholder{color:var(--muted);text-align:center;line-height:1.7}
+    #canvas{width:100%;min-height:420px}
+    #canvas[hidden]{display:none}
+
+    .actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:22px 0}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;padding:13px 20px;border-radius:12px;cursor:pointer;
+      border:1px solid var(--line);background:var(--surface-2);color:var(--text);font-size:15px;font-weight:600;
+      transition:border-color .15s,transform .12s;
+    }
+    .btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;border:none}
+    .btn svg{width:18px;height:18px}
+    .btn[disabled]{opacity:.45;cursor:not-allowed}
+
+    /* ── Live Demo bar ── */
+    .demo-bar{margin:14px auto;max-width:720px;display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap}
+    .demo-note{color:var(--muted);font-size:13px}
+    .demo-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .demo-chips .chip{
+      display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;cursor:pointer;
+      background:linear-gradient(135deg,rgba(34,211,238,.14),rgba(168,85,247,.14));
+      border:1px solid var(--line);color:var(--text);font-size:14px;font-weight:600;transition:.15s;
+    }
+    .demo-chips .chip:hover{border-color:var(--accent);transform:translateY(-1px)}
+    .btn.outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+
+    /* ── Preset keyframes ── */
+    @keyframes joypulse{0%,100%{transform:scale(1);box-shadow:0 0 54px #ffae00}50%{transform:scale(1.12);box-shadow:0 0 90px #ffd54a}}
+    @keyframes joyray{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-66px) scale(1.3)}60%{transform:translateY(0) scale(1)}100%{transform:translateY(-24px) scale(1.1)}}
+    @keyframes joyname{0%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.18) rotate(-2.5deg)}50%{transform:scale(1) rotate(0deg)}75%{transform:scale(1.15) rotate(2deg)}100%{transform:scale(1)}}
+    @keyframes meloFloat{0%,100%{transform:translateY(0);opacity:.92}50%{transform:translateY(-40px);opacity:.5}}
+    @keyframes meloPulse{0%,100%{box-shadow:0 0 22px rgba(148,184,224,.35);opacity:.85}50%{box-shadow:0 0 70px rgba(148,184,224,.8);opacity:1}}
+    @keyframes meloDrop{0%{transform:translateY(-26px);opacity:0}18%{opacity:.85}82%{transform:translateY(300px);opacity:.55}100%{transform:translateY(352px);opacity:0}}
+    @keyframes chaBlob{0%,100%{transform:translate(0,0) scale(1)}22%{transform:translate(96px,-64px) scale(1.35)}44%{transform:translate(-70px,34px) scale(.7)}66%{transform:translate(52px,84px) scale(1.2)}88%{transform:translate(-40px,-52px) scale(.9)}}
+    @keyframes chaBlob2{0%,100%{transform:translate(0,0) scale(1)}30%{transform:translate(-110px,-70px) scale(.8)}55%{transform:translate(80px,20px) scale(1.4)}78%{transform:translate(-20px,96px) scale(1)}}
+    @keyframes chaSpin{to{transform:rotate(360deg)}}
+
+    /* ── Shared art canvas ── */
+    .art{position:relative;width:100%;height:360px;overflow:hidden;border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .art-title{position:absolute;top:16px;left:0;right:0;text-align:center;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.08em}
+    .art-quote{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-family:'DM Sans',sans-serif;font-size:15px;color:#fff;line-height:1.5;padding:8px 16px}
+
+    /* Joyful preset */
+    .ey-sky{background:radial-gradient(circle at 50% 34%,#ffd54a 0%,#ff8f3b 32%,#3b1450 68%,#0B0B10 100%)}
+    .ey-sun{position:absolute;left:50%;top:34%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:radial-gradient(circle,#ffe9a8,#ffb700 70%,#ff7b00);animation:joypulse 2.4s infinite}
+    .ey-ray{position:absolute;width:8px;height:8px;border-radius:50%;background:#ffcf4d;animation:joyray 1.5s ease-in-out infinite}
+    .ey-name{font-family:'Outfit',sans-serif;font-size:34px;font-weight:800;background:linear-gradient(90deg,#ffd54a,#ff8f3b);-webkit-background-clip:text;background-clip:text;color:transparent;animation:joyname 1.6s infinite}
+
+    /* Melancholic preset */
+    .ml-sky{background:linear-gradient(180deg,#0c0e18 0%,#243a5e 36%,#a4c8e1 100%)}
+    .ml-orb{position:absolute;left:50%;top:46%;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#dfe9ff,#9cb4db 60%,#3c4f7a);animation:meloFloat 6s ease-in-out infinite,meloPulse 4s infinite}
+    .ml-drop{position:absolute;top:0;width:3px;height:60px;border-radius:3px;background:linear-gradient(180deg,rgba(164,200,225,.9),rgba(70,96,140,.4));animation:meloDrop 4.5s linear infinite}
+    .ml-title{color:#bcd4ec}
+
+    /* Chaotic preset */
+    .ch-sky{background:radial-gradient(circle at 30% 30%,#ff2d55 0%,#7a0c28 30%,#0B0B10 75%)}
+    .ch-blk{position:absolute;width:54px;height:54px;border-radius:6px;background:linear-gradient(135deg,#ff3b5c,#a855f7);box-shadow:0 0 24px rgba(255,59,92,.6);animation:chaBlob 2.6s infinite}
+    .ch-blk2{position:absolute;width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,#c892ff,#7a2fd6 70%);box-shadow:0 0 20px rgba(168,85,247,.7);animation:chaBlob2 2.1s infinite}
+    .ch-ring{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border:3px solid #ffd54a;border-radius:50%;border-top-color:transparent;animation:chaSpin .7s linear infinite}
+
+    /* ── Typing skeleton loader ── */
+    .sket{font-family:ui-monospace,Consolas,monospace;margin-top:12px;color:var(--muted);font-size:13px;text-align:left;max-height:170px;overflow:hidden}
+    .sket .ln{display:block;padding-left:14px;border-left:2px solid transparent;opacity:0}
+    .sket .ln.show{border-left:2px solid var(--accent);opacity:1}
+    .sket .k{color:#c892ff}.sket .i{color:#7dd3fc}.sket .s{color:#86efac}.sket .n{color:#f6d183}
+    .sket .cur{display:inline-block;width:8px;height:14px;background:var(--accent);animation:curBlink 0.85s step-end infinite;vertical-align:middle}
+    @keyframes curBlink{50%{opacity:0}}
+
+    /* ── Pure-free banner ── */
+    .free-banner{
+      margin:16px auto;max-width:720px;text-align:center;
+      padding:10px 16px;border-radius:999px;font-size:13px;
+      color:var(--muted);border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.06);
+    }
+    .free-banner b{color:var(--accent)}
+
+    @media(max-width:760px){.steps{grid-template-columns:1fr}}
+  </style>
 <body>
 
-  <!-- Header -->
   <header class="site-header">
-    <div class="header-inner">
+    <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
-      <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <nav class="site-nav">
-        <a href="/" class="active">Home</a>
-        <a href="/tool/led-sign.html">LED Sign</a>
-        <a href="/blog/">Blog</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-      </nav>
     </div>
   </header>
 
-  <main class="site-main">
+  <main class="container">
 
-    <!-- Hero -->
     <section class="hero">
-      <h1>Turn Your Phone Into a<br><span class="highlight">Scrolling LED Sign</span></h1>
-      <p>Free online tool to create eye-catching scrolling text displays. Perfect for concerts, parties, events, and small businesses.</p>
-      <a href="/tool/led-sign.html" class="hero-cta">
-        Open LED Sign Maker
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
+      <span class="badge"><span class="dot"></span>Powered by an in-browser AI (Gemini Nano) · Private, runs on your device</span>
+      <h1>Turn how you feel into<br><span class="grad">moving, living art</span></h1>
+      <p>Type a mood or a moment. A generative AI writes a unique piece of animated HTML/CSS art — or a tiny interactive micro-story — just for you. Free, no app, no sign-up.</p>
+      <p class="privacy">🔒 Nothing is sent to a server. Everything is generated and rendered locally in Chrome.</p>
     </section>
 
-    <!-- Tool Preview -->
-    <div class="tool-preview">
-      <div class="demo-screen">
-        <div class="demo-text">Welcome to MooduTools! ★ Try our free LED sign maker ★</div>
-      </div>
-      <h2>Phone LED Signboard Maker</h2>
-      <p>Type your message, pick colors and speed, then go fullscreen. No app download needed — works directly in your browser on any device.</p>
+    <div class="prompt-bar">
+      <input id="moodInput" type="text" maxlength="200" placeholder="e.g. I feel like bouncing with joy today" autocomplete="off" />
+      <button class="go" id="generateBtn">Create it &rarr;</button>
     </div>
 
-    <!-- Blog Section -->
-    <section>
-      <div class="section-header">
-        <h2>Latest Guides</h2>
-        <a href="/blog/">View all &rarr;</a>
+    <div class="examples" id="examples">
+      <span class="chip">&#127769; A calm rainy evening</span>
+      <span class="chip">&#9928; Anxious about tomorrow</span>
+      <span class="chip">&#127800; Melancholic but hopeful</span>
+      <span class="chip">&#9889; Fueled by excitement</span>
+      <span class="chip">&#9749; Slow, cozy Sunday morning</span>
+    </div>
+
+    <!-- Live Demo fallback (for browsers without in-browser AI) -->
+    <div class="demo-bar" id="demoBar">
+      <button class="btn outline" id="demoToggleBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 3a9 9 0 0 1 9 9M11 11v4M12 3a4 4 0 0 1-4 4M6 3a5 5 0 0 1 5 5"/></svg>
+        Try Live Demo &mdash; no AI needed
+      </button>
+      <span class="demo-note">Tap a vibe and watch it move instantly.</span>
+      <div class="demo-chips" id="demoChips">
+        <button class="chip" data-demo="joyful">&#127775; Joyful</button>
+        <button class="chip" data-demo="melancholic">&#127754; Melancholic</button>
+        <button class="chip" data-demo="chaotic">&#128640; Chaotic</button>
       </div>
-      <div class="blog-grid">
+    </div>
 
-        <a href="/blog/complete-guide-phone-led-sign.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Guide</span>
-            <h3>The Complete Guide to Using Your Phone as an LED Sign</h3>
-            <p>Everything you need to know about turning your smartphone into a powerful scrolling text display for any occasion.</p>
-            <div class="blog-card-meta">10 min read</div>
-          </div>
-        </a>
+<div class="status info" id="status" hidden></div>
 
-        <a href="/blog/concert-led-sign-ideas.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Ideas</span>
-            <h3>25 Best Concert LED Sign Ideas That Get Noticed</h3>
-            <p>Stand out at your next concert with creative scrolling messages that artists and fellow fans will love.</p>
-            <div class="blog-card-meta">7 min read</div>
-          </div>
-        </a>
+    <div class="canvas-wrap" id="canvasWrap">
+      <div class="placeholder" id="placeholder">
+        Your moving art will appear here.<br>
+        <span style="border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:12px">Tip</span>&nbsp;requires Chrome with <b>Gemini Nano</b> enabled.
+      </div>
+      <div id="canvas" hidden></div>
+    </div>
 
-        <a href="/blog/birthday-led-messages.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Ideas</span>
-            <h3>Creative Birthday LED Sign Messages &amp; Surprise Ideas</h3>
-            <p>Make birthdays unforgettable with personalized scrolling messages. From heartfelt wishes to funny surprises.</p>
-            <div class="blog-card-meta">6 min read</div>
-          </div>
-        </a>
+    <div class="actions">
+      <button class="btn primary" id="recastBtn" disabled>&#10024; Re-cast this Vibe</button>
+      <button class="btn" id="saveCardBtn" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M6 12h9M6 15h6"/></svg>
+        Save Story Card
+      </button>
+      <button class="btn" id="clipBtn" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="4"/><path d="M5 15h14M12 16v5"/></svg>
+        Download Clip (WebM)
+      </button>
+      <button class="btn primary" id="shareBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 4.6l1.4 1.4l.9 0l1.4-1.4l6.9 0l-1 1.2l.4 0l6.2-9.4l1.4 4.2l.4 0l1.4-1.4l6.4-5.8l-1.3.9l6.4-3.6l-1.3.9l6.8-5.2l-1.3.8l6.9 0l1.4-8.2l.9 0l1.4 1.4l6.6-9.3l-1.3.9l6.4 0l1.3 0l.9-1.4l1.4.9l7.2-6.5"/></svg>
+        Share on X
+      </button>
+    </div>
 
-        <a href="/blog/small-business-digital-signage.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Business</span>
-            <h3>How Small Businesses Can Use Phone LED Signs Effectively</h3>
-            <p>Cost-effective digital signage solutions for cafes, shops, and market stalls using just your smartphone.</p>
-            <div class="blog-card-meta">8 min read</div>
-          </div>
-        </a>
+    <div class="free-banner">Pure &amp; Free: Powered entirely by your browser&rsquo;s <b>local AI</b>. No servers, no tracking, forever free.</div>
 
-        <a href="/blog/sports-fan-led-signs.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Sports</span>
-            <h3>Ultimate Guide to Sports Fan LED Signs at Games</h3>
-            <p>Cheer louder with phone LED signs. Best messages, team colors, and stadium tips for every sport.</p>
-            <div class="blog-card-meta">7 min read</div>
-          </div>
-        </a>
-
-        <a href="/blog/phone-vs-real-led-board.html" class="blog-card">
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Comparison</span>
-            <h3>Phone LED Sign vs Real LED Board: Which Should You Use?</h3>
-            <p>A detailed comparison of phone-based LED signs and physical LED boards for different use cases and budgets.</p>
-            <div class="blog-card-meta">9 min read</div>
-          </div>
-        </a>
-
+    <section class="section" style="margin-top:32px">
+      <h2 style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:700">How it works</h2>
+      <div class="steps" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px">
+        <div class="step" style="background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:20px">
+          <span style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--accent)">01</span>
+          <b style="display:block;margin-top:6px">You share a mood</b>
+          <p style="color:var(--muted);font-size:14px;margin-top:6px">Type any feeling, scene, or moment in your own words.</p>
+        </div>
+        <div class="step" style="background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:20px">
+          <span style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--accent)">02</span>
+          <b style="display:block;margin-top:6px">AI writes the code</b>
+          <p style="color:var(--muted);font-size:14px;margin-top:6px">Chrome's built-in Gemini Nano crafts a custom HTML/CSS animation to match.</p>
+        </div>
+        <div class="step" style="background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:20px">
+          <span style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--accent)">03</span>
+          <b style="display:block;margin-top:6px">Art comes alive</b>
+          <p style="color:var(--muted);font-size:14px;margin-top:6px">A one-of-a-kind moving piece renders instantly, wrapped in a poetic micro-story.</p>
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div>
-        <div class="footer-brand">Moodu<span>Tools</span></div>
-        <p class="footer-desc">Free digital tools to set the mood. Create stunning LED signs, scrolling text displays, and more — all from your browser.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Tools</h4>
-        <a href="/tool/led-sign.html">LED Sign Maker</a>
-      </div>
-      <div class="footer-links">
-        <h4>Resources</h4>
-        <a href="/blog/">Blog</a>
-        <a href="/blog/complete-guide-phone-led-sign.html">LED Sign Guide</a>
-      </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/privacy.html">Privacy Policy</a>
-        <a href="/terms.html">Terms of Service</a>
+  <footer class="site-footer" style="border-top:1px solid var(--line);margin-top:40px;font-size:13px">
+    <div class="footer-inner container" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted)">
+      <span>MooduTools — free generative mood art, in your browser.</span>
+      <div style="display:flex;gap:16px">
+        <a href="/about.html" style="color:var(--muted)">About</a>
+        <a href="/contact.html" style="color:var(--muted)">Contact</a>
+        <a href="/privacy.html" style="color:var(--muted)">Privacy Policy</a>
+        <a href="/terms.html" style="color:var(--muted)">Terms of Service</a>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bottom container" style="text-align:center;padding:14px 0;color:var(--muted)">
       &copy; 2025 MooduTools. All rights reserved.
     </div>
   </footer>
 
+  <script>
+  (function(){
+    'use strict';
+
+    // Captured micro-story text, used for the share button
+    var USER_STORY = '';
+
+    // Strict, deterministic system prompt for the in-browser model
+    var SYSTEM_PROMPT =
+"You are an expert creative frontend developer and storyteller. Your job is to create a single-page interactive digital art or a micro-story block based on the user's emotional state.\n" +
+"Rules:\n" +
+"1. Output ONLY a valid single HTML snippet wrapped in a container <div>.\n" +
+"2. Inside this <div>, you must include:\n" +
+"   - A minimalist, highly stylized visual element constructed purely with HTML elements (divs, spans) and beautiful Tailwind CSS or standard CSS.\n" +
+"   - Dynamic CSS keyframe animations that make the elements MOVE, float, bounce, or pulse according to the mood (e.g., fast/bouncing for happy, slow/fading for sad).\n" +
+"   - A short, poetic 1-2 sentence micro-story or quote that complements the visual.\n" +
+"3. Do NOT wrap the code in markdown blocks (no ```html or ```).\n" +
+"4. Do NOT include any explanations, intro, or outro text. Output ONLY the raw executable HTML/CSS.";
+
+    var GEN = { temperature: 0.8, topK: 64 };
+
+    // UI references (deferred until the DOM below is parsed)
+    var input, goBtn, status, canvas, ph, shareBtn,
+        recastBtn, saveCardBtn, clipBtn, demoToggleBtn, demoChips;
+
+    // Current generation context (used by "Re-cast" & demo mode)
+    var currentMood = '';
+    var currentSource = ''; // 'ai' | 'demo' | ''
+    var DEMO_KEYS = ['joyful', 'melancholic', 'chaotic'];
+
+    function wireUI(){
+      input    = document.getElementById('moodInput');
+      goBtn    = document.getElementById('generateBtn');
+      status   = document.getElementById('status');
+      canvas   = document.getElementById('canvas');
+      ph       = document.getElementById('placeholder');
+      shareBtn = document.getElementById('shareBtn');
+      recastBtn= document.getElementById('recastBtn');
+      saveCardBtn = document.getElementById('saveCardBtn');
+      clipBtn  = document.getElementById('clipBtn');
+      demoToggleBtn = document.getElementById('demoToggleBtn');
+      demoChips    = document.getElementById('demoChips');
+
+      var chips = Array.prototype.slice.call(document.querySelectorAll('#examples .chip'));
+      chips.forEach(function(c){
+        c.addEventListener('click', function(){ input.value = c.textContent.trim(); input.focus(); });
+      });
+      input.addEventListener('keydown', function(e){ if(e.key === 'Enter') generate(); });
+      goBtn.addEventListener('click', generate);
+
+      demoToggleBtn.addEventListener('click', function(){ demoChips.hidden = !demoChips.hidden; });
+      var demoButtons = Array.prototype.slice.call(demoChips.querySelectorAll('.chip'));
+      demoButtons.forEach(function(b){
+        b.addEventListener('click', function(){ playDemo(b.dataset.demo); });
+      });
+      recastBtn.addEventListener('click', recast);
+    }
+
+    // Strip markdown fences, script tags, and surrounding prose so ONLY
+    // executable HTML/CSS reaches the canvas. (Exception-handling layer.)
+    function cleanOutput(raw){
+      if(typeof raw !== 'string') return '';
+      var out = raw;
+      out = out.replace(/```[\s\S]*?```/g, '');   // fenced blocks
+      out = out.replace(/```html/gi, '').replace(/```/g, '');
+      out = out.replace(/<script[\s\S]*?<\/script>/gi, ''); // safety
+      var start = out.indexOf('<div');
+      var end   = out.lastIndexOf('</div>');
+      if(start !== -1 && end !== -1 && end > start){
+        out = out.slice(start, end + '</div>'.length);
+      }
+      return out.trim();
+    }
+// Hand-tuned "Live Demo" presets for browsers without in-browser AI.
+    var DEMOS = {
+      joyful: {
+        quote: 'The sun rises to dance with you — every ray a small golden yes.',
+        html: '<div class="art ey-sky">' +
+          '<div class="ey-sun"></div>' +
+          '<div class="ey-ray" style="left:20%;top:24%"></div>' +
+          '<div class="ey-ray" style="left:32%;top:16%;animation-delay:.4s;animation-duration:1.7s"></div>' +
+          '<div class="ey-ray" style="left:64%;top:20%;animation-delay:.8s;animation-duration:1.2s"></div>' +
+          '<div class="ey-ray" style="left:76%;top:26%;animation-delay:.2s;animation-duration:1.9s"></div>' +
+          '<div class="art-title">☀️ Joyful</div>' +
+          '<div style="position:relative;z-index:2;margin-top:150px" class="ey-name">Joyful</div>' +
+          '<div class="art-quote">The sun rises to dance with you — every ray a small golden yes.</div>' +
+        '</div>'
+      },
+      melancholic: {
+        quote: 'Rain falls slow, and the moon breathes — soft light still remembering itself.',
+        html: '<div class="art ml-sky">' +
+          '<div class="ml-orb"></div>' +
+          '<div class="ml-drop" style="left:14%"></div>' +
+          '<div class="ml-drop" style="left:32%;animation-delay:1.2s"></div>' +
+          '<div class="ml-drop" style="left:52%;animation-delay:2.3s"></div>' +
+          '<div class="ml-drop" style="left:70%;animation-delay:.6s"></div>' +
+          '<div class="ml-drop" style="left:86%;animation-delay:3s"></div>' +
+          '<div class="art-title ml-title">🌙 Melancholic</div>' +
+          '<div style="position:relative;z-index:2;margin-top:150px;color:#cfe0f5;font-family:Outfit,sans-serif;font-size:26px;font-weight:700">Melancholic</div>' +
+          '<div class="art-quote">Rain falls slow, and the moon breathes — soft light still remembering itself.</div>' +
+        '</div>'
+      },
+      chaotic: {
+        quote: 'Electric. Erupting. Chaos that crashes into color and dares you to feel it.',
+        html: '<div class="art ch-sky">' +
+          '<div class="ch-ring"></div>' +
+          '<div class="ch-blk" style="left:18%;top:24%"></div>' +
+          '<div class="ch-blk" style="left:60%;top:16%;animation-delay:.7s;background:linear-gradient(135deg,#a855f7,#22d3ee)"></div>' +
+          '<div class="ch-blk2" style="left:40%;top:54%;animation-name:chaBlob2"></div>' +
+          '<div class="ch-blk2" style="left:74%;top:48%;animation-name:chaBlob;animation-delay:.4s;width:32px;height:32px"></div>' +
+          '<div class="art-title">⚡ Chaotic</div>' +
+          '<div style="position:relative;z-index:2;margin-top:150px;color:#ffd54a;font-family:Outfit,sans-serif;font-size:28px;font-weight:800">Chaotic</div>' +
+          '<div class="art-quote">Electric. Erupting. Chaos that crashes into color and dares you to feel it.</div>' +
+        '</div>'
+      }
+    };
+    function playDemo(key){
+      var d = DEMOS[key];
+      if(!d) d = DEMOS[DEMO_KEYS[0]];
+      ph.hidden = true;
+      canvas.hidden = false;
+      canvas.innerHTML = d.html;
+      runCanvasAnimations();
+      USER_STORY = d.quote;
+      currentSource = 'demo';
+      currentMood = key;
+      shareBtn.disabled = false;
+      saveCardBtn.disabled = false;
+      clipBtn.disabled = false;
+      recastBtn.disabled = false;
+      setState('done');
+    }
+
+    function aiAvailable(){
+      return !!(window.ai && window.ai.languageModel &&
+                typeof window.ai.languageModel.create === 'function');
+    }
+
+    async function generate(overrideMood){
+      var mood = (overrideMood !== undefined) ? overrideMood : input.value.trim();
+      if(!mood){ setStatus('error', 'Please describe how you feel first.'); input.focus(); return; }
+      if(!aiAvailable()){
+        setStatus('error',
+          'This magic needs <strong>Chrome with Gemini Nano enabled</strong> (Settings &rarr; Advanced &rarr; Experimental AI). ' +
+          'Meanwhile, tap a <strong>Live Demo</strong> vibe above to feel the magic right now.');
+        return;
+      }
+
+      // Kick off the "code being typed" skeleton, then run the AI.
+      var typing = showSkeleton('&ldquo;Casting a vibe for <b>' +
+        escapeHtml(mood.slice(0,48)) + (mood.length>48?'&hellip;':'') + '</b>&rdquo; &hellip;');
+      reset();
+
+      try{
+        var session = await window.ai.languageModel.create({
+          systemPrompts: [SYSTEM_PROMPT],
+          temperature: GEN.temperature,
+          topK: GEN.topK
+        });
+
+        var res = await session.prompt(
+          'User\'s mood: "' + mood + '"\n\n' +
+          'Generate the single-page interactive animated HTML/CSS art for this mood. ' +
+          'Remember: only the raw HTML fragment, no markdown, no commentary.'
+        );
+        session.destroy();
+
+        await typing; // let the typing skeleton finish even if the response is instant
+        var html = cleanOutput(res.text());
+        if(!html){
+          setState('error', 'The AI returned no renderable code. Try rephrasing your mood.');
+          return;
+        }
+
+        renderArt(html);
+        currentMood = mood;
+        currentSource = 'ai';
+        setState('done');
+      }catch(err){
+        setState('error',
+          'Could not reach the in-browser AI: <strong>' +
+          escapeHtml(String((err && err.message) || err)) + '</strong>. ' +
+          'Make sure you are on a recent version of Chrome with Gemini Nano enabled.');
+      }
+    }
+
+    // Render an HTML art block and unlock the action bar for it.
+    function renderArt(html){
+      ph.hidden = true;
+      canvas.hidden = false;
+      canvas.innerHTML = html;
+      runCanvasAnimations();
+      var t = (canvas.textContent || '').replace(/\s+/g,' ').trim();
+      USER_STORY = t.length > 140 ? t.slice(0,137) + '\u2026' : t;
+      shareBtn.disabled = false;
+      saveCardBtn.disabled = false;
+      clipBtn.disabled = false;
+      recastBtn.disabled = false;
+    }
+
+    // "Code is being typed" loading skeleton
+    var SKET_LINES = [
+      '<span class="ln"><span class="k">const</span> <span class="i">mood</span> <span class="s">=</span> <span class="n">"you"</span>;</span>',
+      '<span class="ln"><span class="k">const</span> <span class="i">scene</span> <span class="s">=</span> <span class="n">sketch()</span>;</span>',
+      '<span class="ln"><span class="k">let</span> <span class="i">motion</span> <span class="s">=</span> <span class="n">matchBeat</span>(<span class="i">mood</span>);</span>',
+      '<span class="ln"><span class="i">scene</span><span class="s">.</span><span class="i">layers</span><span class="s">.</span><span class="i">forEach</span>(<span class="i">draw</span>);</span>',
+      '<span class="ln"><span class="s">// keyframes: bounce, drift, glow &amp; story &hellip;</span></span>',
+      '<span class="ln"><span class="i">animate</span>(<span class="i">story</span>);</span>',
+      '<span class="ln"><span class="cur"></span></span>'
+    ];
+    function showSkeleton(headerHTML){
+      var sk = '<span class="spinner"></span>' + (headerHTML || '') +
+               '<div class="sket" id="sket">' + SKET_LINES.join('') + '</div>';
+      setStatus('loading', sk);
+      var nodes = Array.prototype.slice.call(document.querySelectorAll('#sket .ln'));
+      var i = 0;
+      var timer = setInterval(function(){
+        if(i < nodes.length){ nodes[i].classList.add('show'); i++; }
+        else { clearInterval(timer); }
+      }, 110);
+      var min = Math.max(1000, nodes.length * 110 + 280);
+      return new Promise(function(res){ setTimeout(res, min); });
+    }
+
+    // Re-cast: regenerate the same mood (AI) or hop to another preset (demo).
+    function recast(){
+      if(currentSource === 'ai' && currentMood){ generate(currentMood); }
+      else if(currentSource === 'demo'){
+        playDemo(DEMO_KEYS[Math.floor(Math.random() * DEMO_KEYS.length)]);
+      }
+    }
+
+    // Force a reflow so @keyframes defined inside the injected node run cleanly
+    function runCanvasAnimations(){
+      canvas.style.display = 'none';
+      void canvas.offsetHeight; // flush layout
+      canvas.style.display = '';
+    }
+
+    function reset(){
+      canvas.hidden = true;
+      ph.hidden = false;
+      canvas.innerHTML = '';
+      USER_STORY = '';
+      shareBtn.disabled = true;
+      saveCardBtn.disabled = true;
+      clipBtn.disabled = true;
+      recastBtn.disabled = true;
+    }
+
+    function setState(kind, html){
+      setStatus(kind, html || '');
+      status.hidden = (kind === 'done');
+    }
+    function setStatus(kind, html){
+      status.className = 'status ' + kind;
+      status.hidden = false;
+      status.innerHTML = (kind === 'loading'
+        ? '<span class="spinner"></span>' : '') + html;
+    }
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')
+              .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Wire UI elements BEFORE attaching action listeners
+    wireUI();
+
+    // Share on X with the captured micro-story
+    shareBtn.addEventListener('click', function(){
+      var text = USER_STORY || 'I turned my mood into living art with @MooduTools \u{1F3A8}\u{1FA84}';
+      var intent = 'https://twitter.com/intent/tweet?text=' +
+        encodeURIComponent(text + '\n\n') + '&url=' + encodeURIComponent('https://moodutools.com/');
+      window.open(intent, '_blank', 'noopener,noreferrer');
+    });
+
+    
+
+    // ── Save Story Card (native canvas → PNG, no external libs) ──
+    saveCardBtn.addEventListener('click', function(){ saveStoryCard(); });
+    function canvasToUrl(cv){
+      if(typeof cv.toDataURL === 'function') return cv.toDataURL('image/png');
+      throw new Error('PNG export is not supported in this browser');
+    }
+    function roundRect(g,x,y,w,h,r){
+      g.beginPath();
+      if(typeof g.roundRect === 'function'){ g.roundRect(x,y,w,h,r); }
+      else { g.rect(x,y,w,h); }
+      g.closePath();
+    }
+    function saveStoryCard(){
+      try{
+        var W=820, H=1060;
+        var cv=document.createElement('canvas');
+        cv.width=W; cv.height=H;
+        var g=cv.getContext('2d');
+
+        var grad=g.createLinearGradient(0,0,W,H);
+        grad.addColorStop(0,'#0B0B10');grad.addColorStop(.5,'#2a1a4e');grad.addColorStop(1,'#22D3EE');
+        g.fillStyle=grad;g.fillRect(0,0,W,H);
+        var glow=g.createRadialGradient(W/2,320,0,W/2,320,380);
+        glow.addColorStop(0,'rgba(168,85,247,.7)');glow.addColorStop(1,'rgba(168,85,247,0)');
+        g.fillStyle=glow;g.fillRect(0,0,W,H);
+        for(var i=0;i<26;i++){
+          var x=(i*97+31)%W, y=(i*59*31)%H;
+          g.fillStyle='rgba(34,211,238,'+(0.04+(i%5)*0.02)+')';
+          g.beginPath();g.arc(x,y,((i%4)+1)*1.6,0,Math.PI*2);g.fill();
+        }
+
+        g.fillStyle='#EDEDF4';g.font='700 42px Outfit, Arial';
+        g.fillText('MooduTools', 44, 120);
+        g.fillStyle='#8A8A9C';g.font='500 22px Outfit, Arial';
+        g.fillText('A moving vibe, captured.', 44, 162);
+
+        var cardX=70, cardY=250, cardW=W-140, cardH=470;
+        var card=g.createLinearGradient(cardX,cardY,cardX,cardY+cardH);
+        card.addColorStop(0,'rgba(255,255,255,.06)');card.addColorStop(1,'rgba(255,255,255,.03)');
+        g.fillStyle=card; roundRect(g,cardX,cardY,cardW,cardH,26); g.fill();
+        g.strokeStyle='rgba(34,211,238,.7)';g.lineWidth=3; roundRect(g,cardX,cardY,cardW,cardH,26); g.stroke();
+
+        g.fillStyle='#22D3EE';g.font='700 18px Outfit, Arial';
+        g.fillText('VIBE', W-150, cardY+48);
+        g.fillStyle='#EDEDF4';g.font='700 110px Outfit, Arial';
+        var em = (currentSource==='demo')
+          ? (currentMood==='joyful'?'☀️':currentMood==='melancholic'?'🌙':'⚡')
+          : '✨';
+        g.fillText(em, cardX+40, cardY+185);
+
+        var words=USER_STORY.split(' '), lines=[], line='';
+        for(var j=0;j<words.length;j++){
+          if((line+' '+words[j]).trim().length>34){ lines.push(line); line=words[j]; }
+          else line=(line?line+' ':'')+words[j];
+        }
+        if(line) lines.push(line);
+        g.fillStyle='#EDEDF4';g.font='500 26px DM Sans, Arial';
+        var ty=cardY+300;
+        for(var l=0;l<lines.length;l++){ g.fillText(lines[l], cardX+44, ty); ty+=38; }
+
+        g.fillStyle='#8A8A9C';g.font='500 20px Outfit, Arial';
+        g.fillText('made with MooduTools — moodutools.com', 120, H-70);
+
+        triggerDownload(canvasToUrl(cv), 'moodutools-vibe-card.png');
+        setStatus('info','<strong>Story card saved:</strong> check your downloads.');
+        setTimeout(function(){ status.hidden = true; }, 2600);
+      }catch(err){
+        setStatus('error','Could not export the card: <strong>' + escapeHtml(String(err)) + '.</strong>');
+      }
+    }
+
+    // ── Download Animated Clip (experimental MediaRecorder → WebM) ──
+    clipBtn.addEventListener('click', function(){ recordClip(); });
+    async function recordClip(){
+      var MR = window.MediaRecorder;
+      if(!MR || !navigator.mediaDevices){
+        setStatus('error',
+          'This browser lacks the experimental <strong>MediaRecorder</strong> API. Use <strong>Save Story Card</strong> instead, ' +
+          'or record your screen with your OS recorder.');
+        return;
+      }
+      try{
+        var stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        var chunks=[];
+        var m = new MR(stream, { mimeType:'video/webm;codecs=vp9' });
+        m.addEventListener('dataavailable', function(e){ chunks.push(e.data); });
+        m.start(500);
+        setStatus('loading','<span class="spinner"></span> Recording for 3.5s &mdash; keep the art on screen &hellip;');
+        await new Promise(function(r){ setTimeout(r, 3500); });
+        m.stop();
+        await new Promise(function(r){ setTimeout(r, 700); });
+        stream.getTracks().forEach(function(t){ try{ t.stop(); }catch(_){} });
+
+        var blob = new Blob(chunks, { type:'video/webm' });
+        if(blob.size > 0){
+          triggerDownload(blob, 'moodutools-vibe.webm');
+          setStatus('info','<strong>Clip saved:</strong> check your downloads.');
+          setTimeout(function(){ status.hidden = true; }, 2600);
+        }else{
+          setStatus('error','Recording came back empty. Try <strong>Save Story Card</strong> instead.');
+        }
+      }catch(err){
+        setStatus('error',
+          'Recording needs your permission to capture this tab. If it was blocked, use <strong>Save Story Card</strong> instead.');
+      }
+    }
+
+    // Generic downloader for a data URL or Blob
+    function triggerDownload(src, name){
+      var a=document.createElement('a');
+      a.href   = (typeof src === 'string') ? src : URL.createObjectURL(src);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){
+        if(typeof src !== 'string'){ URL.revokeObjectURL(a.href); }
+        a.remove();
+      }, 900);
+    }
+
+    // Bootstrap — if in-browser AI is missing, still invite users to the live demo
+    if(!aiAvailable()){
+      setState('info',
+        '<strong>In-browser AI is off.</strong> To generate <b>your own</b> vibe art, enable <b>Gemini Nano</b> ' +
+        '(Chrome Settings &rarr; Advanced &rarr; Experimental AI). ' +
+        'Meanwhile, tap a <b>Live Demo</b> vibe above &mdash; it moves right now, on your device.');
+    }
+  })();
+  </script>
 </body>
 </html>
