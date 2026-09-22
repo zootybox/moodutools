@@ -115,6 +115,21 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .status[hidden]{display:none}
 
+    /* Canvas-area dynamic state (loading / error card) */
+    .canvas-state{width:100%;min-height:420px;display:flex;align-items:center;justify-content:center;padding:28px}
+    .canvas-state[hidden]{display:none}
+    .canvas-state.loading{background:rgba(24,24,34,.35)}
+    .canvas-state.error{background:rgba(24,24,34,.4)}
+    .canvas-state .state-spinner{width:40px;height:40px;border:3px solid rgba(34,211,238,.22);border-top-color:#22d3ee;border-radius:50%;animation:spin .7s linear infinite;flex:0 0 auto;margin-right:18px}
+    .canvas-state .state-stage{color:var(--muted);font-size:16px;max-width:360px}
+    .state-card{max-width:520px;width:100%;text-align:center;background:rgba(18,18,26,.72);border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.38)}
+    .state-card .state-ico{font-size:40px;line-height:1}
+    .state-card .state-title{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;margin:14px 0 8px;color:var(--text)}
+    .state-card .state-msg{color:var(--muted);font-size:15px;margin-bottom:20px}
+    .state-card .state-demo{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;padding:12px 22px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 18px rgba(34,211,238,.3);transition:transform .12s ease}
+    .state-card .state-demo:hover{transform:translateY(-2px)}
+    @media(max-width:520px){.canvas-state .state-stage{font-size:14px}.state-card{padding:26px 20px}}
+
     .canvas-wrap{
       background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
       min-height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -268,6 +283,7 @@
         <span style="border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:12px">Tip</span>&nbsp;requires Chrome with <b>Gemini Nano</b> enabled.
       </div>
       <div id="canvas" hidden></div>
+      <div class="canvas-state" id="canvasState" hidden></div>
     </div>
 
     <div class="actions">
@@ -338,7 +354,7 @@
     var AI_TIMEOUT_PROMPT = 6000; // ms — session.prompt() response
 
     // UI references (deferred until the DOM below is parsed)
-    var input, goBtn, status, canvas, ph, shareBtn,
+    var input, goBtn, status, canvas, ph, stateBox, shareBtn,
         recastBtn, saveCardBtn, clipBtn, demoToggleBtn, demoChips;
 
     // Current generation context (used by "Re-cast" & demo mode)
@@ -356,6 +372,7 @@
       status   = document.getElementById('status');
       canvas   = document.getElementById('canvas');
       ph       = document.getElementById('placeholder');
+      stateBox = document.getElementById('canvasState');
       shareBtn = document.getElementById('shareBtn');
       recastBtn= document.getElementById('recastBtn');
       saveCardBtn = document.getElementById('saveCardBtn');
@@ -440,6 +457,8 @@
       console.log('[MooduTools AI] playDemo("' + key + '") — Live Demo preset.');
       var d = DEMOS[key];
       if(!d) d = DEMOS[DEMO_KEYS[0]];
+      stopCanvasLoading();
+      stateBox.hidden = true;
       ph.hidden = true;
       canvas.hidden = false;
       canvas.innerHTML = d.html;
@@ -558,14 +577,23 @@
       if(!aiAvailable()){
         console.error('[MooduTools AI] window.ai / languageModel unavailable.');
         finishGenerate();
-        setStatus('error',
-          'This magic needs <strong>Chrome with Gemini Nano enabled</strong> (Settings &rarr; Advanced &rarr; Experimental AI). ' +
-          'Meanwhile, tap a <strong>Live Demo</strong> vibe above to feel the magic right now.');
+        setStatus('info',
+          'AI not detected &mdash; choose a <strong>Live Demo</strong> below, or enable Gemini Nano to generate your own.');
+        showCanvasError({
+          title: 'Local Browser AI Not Detected',
+          message: 'Your moving art requires Chrome with Gemini Nano enabled. ' +
+                   'Enable the in-browser model in Chrome Settings &rarr; Advanced &rarr; Experimental AI, ' +
+                   'or jump straight into a preset below.',
+          showDemo: true
+        });
         return;
       }
       console.log('[MooduTools AI] Gemini Nano available ✓');
 
       reset();
+
+      // Show the spinner inside the canvas area (over the placeholder we just reset).
+      startCanvasLoading();
 
       // [UX 1] Stage 2 — model init / (first-time) download.
       console.log('[MooduTools AI] Step 2 · Initializing Gemini Nano Model...');
@@ -608,6 +636,7 @@
           console.warn('[MooduTools AI] Model returned no renderable HTML.');
           toast('The AI returned no renderable code. Try rephrasing your mood.', 'info');
           setState('error', 'The AI returned no renderable code. Try rephrasing your mood.');
+          showCanvasError({ title: 'Nothing to Render Yet', message: 'The AI returned no renderable code. Try rephrasing your mood, or open a Live Demo below.', showDemo: true });
           return;
         }
 
@@ -630,6 +659,11 @@
             'AI initialization timeout. Checking your browser AI capabilities... ' +
             '<span style="opacity:.7">(details: ' + escapeHtml(msg) + ')</span>');
           toast('AI initialization timed out. Please ensure Gemini Nano is fully downloaded in chrome://components.', 'error');
+          showCanvasError({
+            title: 'AI Initialization Timed Out',
+            message: 'The on-device model did not respond in time — it may still be downloading. Check chrome://components and try again, or explore a Live Demo.',
+            showDemo: true
+          });
           return;
         }
         if(isPromptTimeout){
@@ -639,6 +673,11 @@
           setStatus('error',
             'AI response timed out. Please check if your Chrome Gemini Nano model is fully downloaded in \'chrome://components\'.');
           toast('AI response timed out. Check chrome://components for the Gemini Nano model.', 'error');
+          showCanvasError({
+            title: 'AI Response Timed Out',
+            message: 'The on-device model did not respond within the timeout. The model may still be finalizing — check chrome://components and try again.',
+            showDemo: true
+          });
           return;
         }
 
@@ -647,6 +686,11 @@
         setStatus('error',
           'Chrome AI Model is still finalizing setup in your browser. Please try again in a few moments or use the <strong>Live Demo</strong> presets below. ' +
           '<span style="opacity:.7">(details: ' + escapeHtml(msg) + ')</span>');
+        showCanvasError({
+          title: 'Generation Failed',
+          message: 'Something went wrong while the on-device AI was generating. You can try again or open a Live Demo below.',
+          showDemo: true
+        });
       }finally{
         // [UX 2] Always hand control back to the user, even on timeout.
         finishGenerate();
@@ -657,6 +701,8 @@
     // Render an HTML art block and unlock the action bar for it.
     function renderArt(html){
       console.log('[MooduTools AI] renderArt() — injecting HTML block.');
+      stopCanvasLoading();
+      stateBox.hidden = true;
       ph.hidden = true;
       canvas.hidden = false;
       canvas.innerHTML = html;
@@ -708,7 +754,67 @@
       canvas.style.display = '';
     }
 
+    function clearCanvasState(){
+      if(stateBox.__st){ clearInterval(stateBox.__st); stateBox.__st = null; }
+      stateBox.hidden = true;
+    }
+
+    // Loading — show a spinning loader + rotating stage text inside the canvas area.
+    var CANVAS_LOAD_STAGES = [
+      'Connecting to Gemini Nano...',
+      'Crafting dynamic CSS art...'
+    ];
+    function showCanvasLoading(stageText){
+      ph.hidden = true;
+      canvas.hidden = true;
+      stateBox.hidden = false;
+      stateBox.className = 'canvas-state loading';
+      stateBox.innerHTML =
+        '<span class="state-spinner"></span>' +
+        '<span class="state-stage" id="stateStage">' + escapeHtml(stageText || CANVAS_LOAD_STAGES[0]) + '</span>';
+    }
+    function startCanvasLoading(){
+      showCanvasLoading(CANVAS_LOAD_STAGES[0]);
+      if(stateBox.__st) clearInterval(stateBox.__st);
+      stateBox.__st = setInterval(function(){
+        var el = document.getElementById('stateStage');
+        if(!el){ clearCanvasState(); return; }
+        var i = CANVAS_LOAD_STAGES.indexOf(el.textContent) + 1;
+        el.textContent = CANVAS_LOAD_STAGES[i % CANVAS_LOAD_STAGES.length];
+      }, 2200);
+    }
+    function stopCanvasLoading(){ if(stateBox.__st){ clearInterval(stateBox.__st); stateBox.__st = null; } }
+
+    // Error — render a glassmorphism error card inside the canvas area with a Live Demo CTA.
+    function showCanvasError(opts){
+      ph.hidden = true;
+      canvas.hidden = true;
+      stopCanvasLoading();
+      stateBox.hidden = false;
+      stateBox.className = 'canvas-state error';
+      var title = opts.title || 'Local Browser AI Not Detected';
+      var msg   = opts.message || 'Your moving art requires Chrome with Gemini Nano enabled.';
+      var demo  = (opts.showDemo === false) ? '' :
+        '<button type="button" class="state-demo" id="stateDemoBtn">&#10024; Try Live Demo &mdash; no AI needed</button>';
+      stateBox.innerHTML =
+        '<div class="state-card">' +
+          '<div class="state-ico">&#9888;&#65039;</div>' +
+          '<h3 class="state-title">' + escapeHtml(title) + '</h3>' +
+          '<p class="state-msg">' + msg + '</p>' +
+          demo +
+        '</div>';
+      var b = document.getElementById('stateDemoBtn');
+      if(b){ b.addEventListener('click', playRandomDemo); }
+    }
+
+    function playRandomDemo(){
+      console.log('[MooduTools AI] Error-card CTA → loading a Live Demo.');
+      var k = DEMO_KEYS[Math.floor(Math.random() * DEMO_KEYS.length)];
+      playDemo(k);
+    }
+
     function reset(){
+      clearCanvasState();
       canvas.hidden = true;
       ph.hidden = false;
       canvas.innerHTML = '';
