@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta name="google-site-verification" content="Hv2Ig3ryGJ5pLcU0tszsWMk0PwMDARKQgal0IilTrYk" />
   <meta charset="UTF-8">
@@ -321,7 +321,7 @@
     }
     function switchTab(tab){
       activeTab = tab; activePreset = null; lastOutput = '';
-      outputBox.textContent = '결과가 여기에 표시됩니다.';
+      outputBox.textContent = 'Your result will appear here.';
       outputBox.classList.add('placeholder');
       copyBtn.disabled = true; shareBtn.disabled = true; copyTip.textContent = '';
       inputText.value = '';
@@ -334,7 +334,7 @@
     }
     function buildSystemPrompt(){
       var base = TOOLS[activeTab].systemPrompt;
-      if(activePreset !== null){ base += '\n[프리셋 적용] ' + TOOLS[activeTab].presets[activePreset].guide; }
+      if(activePreset !== null){ base += '\n[Preset applied] ' + TOOLS[activeTab].presets[activePreset].guide; }
       return base;
     }
     function showGate(){ aiGate.classList.remove('hidden'); }
@@ -342,12 +342,12 @@
     // ══ Run: stage-by-stage feedback, timeout-aware, always recovers UI ══
     async function run(){
       var text = inputText.value.trim();
-      if(!text){ toast('입력 내용을 먼저 작성해 주세요.'); inputText.focus(); return; }
-      if(!aiAvailable()){ showGate(); toast('Gemini Nano가 감지되지 않았습니다. 활성화 안내를 확인해 주세요.'); return; }
+      if(!text){ toast('Please enter some text first.'); inputText.focus(); return; }
+      if(!aiAvailable()){ showGate(); toast('Gemini Nano was not detected. Please follow the activation steps above.'); return; }
 
       setBusy();
       runBtn.textContent = '🔄 Connecting...';
-      runHint.textContent = '로컬 AI에 연결하는 중...';
+      runHint.textContent = 'Connecting to your local AI...';
       try{
         var session;
         try{
@@ -355,28 +355,28 @@
         }catch(err){
           var m = String((err && err.message) || err);
           if(m.indexOf('TIMEOUT') === 0){
-            toast('AI 연결이 6초 내 완료되지 않았습니다. chrome://components → Optimization Guide On Device Model에서 업데이트를 확인해 주세요.');
+            toast('AI connection did not complete within 6 seconds. Check for an update under chrome://components → Optimization Guide On Device Model.');
           } else {
-            toast('Chrome 설정을 확인해 주세요 (chrome://components → Optimization Guide On Device Model).');
+            toast('Please check your Chrome settings (chrome://components → Optimization Guide On Device Model).');
           }
           throw err;
         }
         runBtn.textContent = '⏳ Initializing Gemini Nano...';
-        runHint.textContent = '모델 응답 대기 중...';
+        runHint.textContent = 'Waiting for the model to respond...';
         var res = await withTimeout(Promise.resolve(session.prompt(text)), 6000, 'prompt');
         if(session.destroy){ try{ session.destroy(); }catch(_){} }
         lastOutput = (res && typeof res.text === 'function') ? res.text() : String(res);
         outputBox.classList.remove('placeholder');
         outputBox.textContent = lastOutput;
         copyBtn.disabled = false;
-        runHint.textContent = '완료되었습니다.';
+        runHint.textContent = 'Done.';
       }catch(err){
         console.error('[MooduTools AI] error:', err);
-        outputBox.textContent = '처리 중 오류가 발생했습니다.';
+        outputBox.textContent = 'An error occurred while processing.';
         outputBox.classList.add('placeholder');
-        runHint.textContent = '다시 시도해 주세요.';
+        runHint.textContent = 'Please try again.';
       }finally{
-        runBtn.textContent = '✨ 실행하기';
+        runBtn.textContent = '✨ Generate';
         setIdle(); // ══ always restore UI control on timeout / rejection ══
       }
     }
@@ -384,11 +384,11 @@
     function copyOut(){
       if(!lastOutput) return;
       var done = function(){
-        copyBtn.textContent = '✓ 복사 완료!';
+        copyBtn.textContent = '✓ Copied!';
         copyBtn.classList.add('copied');
-        copyTip.textContent = '복사 완료! ✓';
+        copyTip.textContent = 'Copied! ✓';
         setTimeout(function(){
-          copyBtn.textContent = '📋 복사하기';
+          copyBtn.textContent = '📋 Copy';
           copyBtn.classList.remove('copied');
           copyTip.textContent = '';
         }, 2000);
@@ -398,8 +398,8 @@
     }
     // ══ Share on X: build intent URL with the branded viral line + output snippet ══
     function shareToX(){
-      if(!lastOutput){ toast('공유할 결과물이 없습니다. 먼저 실행해 주세요.'); return; }
-      var base = '100% Private On-Device AI로 텍스트를 다듬었습니다 ✨ moodutools.com #MooduTools #GeminiNano';
+      if(!lastOutput){ toast('There is no result to share yet. Please generate something first.'); return; }
+      var base = 'I polished my text with 100% private on-device AI ✨ moodutools.com #MooduTools #GeminiNano';
       var snippet = lastOutput.replace(/\s+/g, ' ').trim();
       if(snippet.length > 120){ snippet = snippet.slice(0, 120) + '…'; }
       var text = base + '\n\n' + snippet;
@@ -418,8 +418,8 @@
       e.preventDefault(); activePreset = null; renderChips();
     });
     document.getElementById('retryGateBtn').addEventListener('click', function(){
-      if(aiAvailable()){ aiGate.classList.add('hidden'); toast('Gemini Nano가 감지되었습니다. ✨'); }
-      else { toast('아직 Gemini Nano가 감지되지 않았습니다. chrome://components를 확인해 주세요.'); }
+      if(aiAvailable()){ aiGate.classList.add('hidden'); toast('Gemini Nano detected. ✨'); }
+      else { toast('Gemini Nano is still not detected. Please check chrome://components.'); }
     });
     switchTab('builder');
     if(!aiAvailable()) showGate();
