@@ -128,38 +128,38 @@
       1) Open <code>chrome://flags/#prompt-api-for-gemini-nano</code> &rarr; <b>Enabled</b><br>
       2) Open <code>chrome://flags/#optimization-guide-on-device-model</code> &rarr; <b>Enabled BypassPrefRequirement</b><br>
       3) Relaunch Chrome &rarr; open <code>chrome://components</code> &rarr; <b>Check for update</b> on <b>Optimization Guide On Device Model</b><br>
-      <button type="button" class="btn primary" id="retryGateBtn" style="margin-top:10px;padding:9px 18px;font-size:13.5px">다시 확인</button>
+      <button type="button" class="btn primary" id="retryGateBtn" style="margin-top:10px;padding:9px 18px;font-size:13.5px">Check again</button>
     </div>
 
     <div class="tool-card">
       <div class="tabs" id="tabs">
-        <button type="button" class="tab" data-tab="builder"><span class="ico">🪄</span>프롬프트 빌더</button>
-        <button type="button" class="tab" data-tab="tone"><span class="ico">🎭</span>어조 변환기</button>
-        <button type="button" class="tab" data-tab="summary"><span class="ico">📋</span>핵심 요약기</button>
+        <button type="button" class="tab" data-tab="builder"><span class="ico">🪄</span>Prompt Builder</button>
+        <button type="button" class="tab" data-tab="tone"><span class="ico">🎭</span>Tone Shifter</button>
+        <button type="button" class="tab" data-tab="summary"><span class="ico">📋</span>Smart Summarizer</button>
       </div>
 
       <textarea id="inputText" placeholder=""></textarea>
 
       <div class="presets-label">
-        <span>빠른 선택 (옵션)</span>
-        <a href="#" id="clearPreset" style="font-size:12px;color:var(--accent)">선택 해제</a>
+        <span>Quick select (optional)</span>
+        <a href="#" id="clearPreset" style="font-size:12px;color:var(--accent)">Clear</a>
       </div>
       <div class="preset-chips" id="presetChips"></div>
 
       <div class="run-row">
-        <button type="button" class="btn primary" id="runBtn">✨ 실행하기</button>
-        <span class="run-hint" id="runHint">Chrome 내장 AI로 처리합니다.</span>
+        <button type="button" class="btn primary" id="runBtn">✨ Generate</button>
+        <span class="run-hint" id="runHint">Processed locally by Chrome's built-in AI.</span>
       </div>
 
-      <div class="out-label"><span>결과물</span><span class="copy-tip" id="copyTip"></span></div>
-      <div class="output-box placeholder" id="outputBox">결과가 여기에 표시됩니다.</div>
+      <div class="out-label"><span>Output</span><span class="copy-tip" id="copyTip"></span></div>
+      <div class="output-box placeholder" id="outputBox">Your result will appear here.</div>
       <div class="copy-wrap">
-        <button type="button" class="copy-btn" id="copyBtn" disabled>📋 복사하기</button>
-        <button type="button" class="share-btn" id="shareBtn" disabled>𝕏 X(트위터)로 공유하기</button>
+        <button type="button" class="copy-btn" id="copyBtn" disabled>📋 Copy</button>
+        <button type="button" class="share-btn" id="shareBtn" disabled>𝕏 Share on X</button>
       </div>
     </div>
 
-    <p class="privacy-foot">🔒 100% On-Device &amp; Private. 입력한 텍스트는 브라우저 내부에서만 처리되며 어디에도 저장되지 않습니다.</p>
+    <p class="privacy-foot">🔒 100% On-Device &amp; Private. Your text is processed only inside your browser and is never stored anywhere.</p>
   </main>
 
   <footer class="site-footer">
@@ -255,33 +255,33 @@
     // ══ Dynamic per-tab system prompts + presets (100% on-device) ══
     var TOOLS = {
       builder: {
-        placeholder:'예: 여름 세일 마케팅 이메일 작성을 위한 프롬프트를 알려줘',
-        hint:'간단한 아이디어를 완성형 프롬프트로 확장합니다.',
-        systemPrompt:'당신은 세계 최고의 프롬프트 엔지니어입니다. 사용자의 간단한 입력을 페르소나, 목표, 제약조건, 포맷이 완벽한 고품질 프롬프트로 확장하세요.',
+        placeholder:'e.g. Write a prompt for creating a summer-sale marketing email',
+        hint:'Turns a simple idea into a complete, high-quality prompt.',
+        systemPrompt:'You are a world-class prompt engineer. Expand the user\'s simple input into a high-quality prompt with a clear persona, goal, constraints, and output format.',
         presets:[
-          {label:'블로그 글 작성', guide:'블로그 글 작성을 위한 프롬프트로 확장하세요. 주제, 페르소나, 문체, 목차, 분량, 마무리 CTA를 포함하세요.'},
-          {label:'코드 리뷰 요청', guide:'코드 리뷰 요청용 프롬프트로 확장하세요. 역할, 리뷰 관점, 체크리스트, 출력 포맷을 포함하세요.'},
-          {label:'SNS 마케팅', guide:'SNS 마케팅 문구를 위한 프롬프트로 확장하세요. 플랫폼, 대상, 훅, 해시태그, CTA를 포함하세요.'}
+          {label:'Blog post', guide:'Expand this into a prompt for writing a blog post. Include topic, persona, tone, outline, length, and a closing CTA.'},
+          {label:'Code review request', guide:'Expand this into a prompt for requesting a code review. Include role, review focus, checklist, and output format.'},
+          {label:'Social media marketing', guide:'Expand this into a prompt for social media marketing copy. Include platform, audience, hook, hashtags, and CTA.'}
         ]
       },
       tone: {
-        placeholder:'변환하고 싶은 원문을 여기에 붙여넣으세요.',
-        hint:'선택한 톤에 맞춰 원문을 재작성합니다.',
-        systemPrompt:'사용자가 제공한 원문 텍스트를 지정된 톤앤매너에 맞추어 문맥과 어휘를 자연스럽고 세련되게 다듬어 재작성하세요.',
+        placeholder:'Paste the original text you want to rewrite here.',
+        hint:'Rewrites your text in the selected tone.',
+        systemPrompt:'Rewrite the user\'s text to match the specified tone and style, polishing the wording and vocabulary to sound natural and refined.',
         presets:[
-          {label:'정중한 비즈니스', guide:'정중하고 전문적인 비즈니스 톤으로 다듬으세요.'},
-          {label:'부드러운 거절', guide:'상대를 배려하며 부드럽게 거절하는 톤으로 다듬으세요.'},
-          {label:'단호하지만 예의바르게', guide:'단호하면서도 예의 바른 어조로 바꾸세요.'}
+          {label:'Polite business', guide:'Rewrite in a polite, professional business tone.'},
+          {label:'Gentle rejection', guide:'Rewrite in a considerate tone that politely declines.'},
+          {label:'Firm but courteous', guide:'Rewrite in a firm yet polite, courteous tone.'}
         ]
       },
       summary: {
-        placeholder:'요약하거나 설명하고 싶은 원문을 여기에 붙여넣으세요.',
-        hint:'핵심 내용을 요청한 형식으로 정리합니다.',
-        systemPrompt:'원문의 핵심 내용을 누락 없이 파악하여 요청한 형식(3줄 요약 또는 쉬운 용어 풀이)으로 명확히 정리하세요.',
+        placeholder:'Paste the source text you want to summarize or explain here.',
+        hint:'Summarizes the key points in your requested format.',
+        systemPrompt:'Identify the key points of the source text without omission and present them clearly in the requested format (a 3-line summary or plain-language explanation).',
         presets:[
-          {label:'3줄 핵심 요약', guide:'원문을 3줄의 핵심 요약으로 정리하세요.'},
-          {label:'초등학생 버전(쉬운 설명)', guide:'어린이가 이해하기 쉽게 쉬운 용어로 설명하세요.'},
-          {label:'실행 액션 추출', guide:'원문에서 실행 가능한 구체적인 액션을 번호 목록으로 추출하세요.'}
+          {label:'3-line summary', guide:'Summarize the source text into a 3-line key-point summary.'},
+          {label:'Explain like I\'m 5', guide:'Explain in simple words a young reader can easily understand.'},
+          {label:'Extract action items', guide:'Extract concrete, actionable steps from the source text as a numbered list.'}
         ]
       }
     };
