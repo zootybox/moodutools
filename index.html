@@ -309,6 +309,11 @@
 
     var GEN = { temperature: 0.8, topK: 64 };
 
+    // Async anti-lock constants: hard ceilings so a pending AI promise can never
+    // freeze the UI indefinitely. Session init and prompt each get 6 seconds.
+    var AI_TIMEOUT_INIT   = 6000; // ms — session factory/session creation
+    var AI_TIMEOUT_PROMPT = 6000; // ms — session.prompt() response
+
     // UI references (deferred until the DOM below is parsed)
     var input, goBtn, status, canvas, ph, shareBtn,
         recastBtn, saveCardBtn, clipBtn, demoToggleBtn, demoChips;
@@ -426,11 +431,80 @@
       setState('done');
     }
 
+    function hasFn(obj, method){
+      return !!(obj && typeof obj[method] === 'function');
+    }
+
+    // Probe every known AI factory endpoint across Chrome spec versions.
     function aiAvailable(){
-      var avail = !!(window.ai && window.ai.languageModel &&
-                typeof window.ai.languageModel.create === 'function');
+      var g = (window.ai || globalThis.ai || null);
+      var avail = !!(
+        g &&
+        (hasFn(g.languageModel, 'create') ||        // newest spec: languageModel.create()
+         hasFn(g, 'createTextSession') ||           // older experimental flag
+         hasFn(g, 'createSession') ||               // intermediate spec
+         hasFn(g, 'createLanguageModel') ||         // earliest experimental
+         hasFn(g.assistant, 'create'))              // per-session assistant factory
+      );
       console.log('[MooduTools AI] aiAvailable →', avail);
       return avail;
+    }
+
+    // Async timeout guard: rejects a pending Promise after `ms` milliseconds.
+    function withTimeout(promise, ms, label){
+      return new Promise(function(resolve, reject){
+        var timer = setTimeout(function(){
+          reject(new Error('TIMEOUT [' + label + '] exceeded ' + ms + 'ms'));
+        }, ms);
+        promise.then(
+          function(v){ clearTimeout(timer); resolve(v); },
+          function(e){ clearTimeout(timer); reject(e); }
+        );
+      });
+    }
+
+    // Compatibility factory: try every safe endpoint in priority order so an
+    // unsupported/stale factory can never leave the promise pending forever.
+    async function createAISession(){
+      var g = (window.ai || globalThis.ai || null);
+      var opts = {
+        systemPrompts: [SYSTEM_PROMPT],
+        temperature: GEN.temperature,
+        topK: GEN.topK,
+        systemPrompt: SYSTEM_PROMPT             // alt naming used by some builds
+      };
+
+      if(g){
+        if(hasFn(g.languageModel, 'create')){
+          console.log('[DEBUG] Factory check passed → window.ai.languageModel.create()');
+          return await g.languageModel.create(opts);
+        }
+        if(hasFn(g, 'createTextSession')){
+          console.log('[DEBUG] Factory check passed → window.ai.createTextSession()');
+          return await g.createTextSession(opts);
+        }
+        if(hasFn(g, 'createSession')){
+          console.log('[DEBUG] Factory check passed → window.ai.createSession()');
+          return await g.createSession(opts);
+        }
+        if(hasFn(g, 'createLanguageModel')){
+          console.log('[DEBUG] Factory check passed → window.ai.createLanguageModel()');
+          return await g.createLanguageModel(opts);
+        }
+        if(hasFn(g.assistant, 'create')){
+          console.log('[DEBUG] Factory check passed → window.ai.assistant.create()');
+          return await g.assistant.create(opts);
+        }
+      }
+      console.log('[DEBUG] No compatible AI factory endpoint found.');
+      throw new Error('No compatible window.ai factory endpoint found in this build.');
+    }
+
+    // Safe teardown: not every factory exposes destroy().
+    function destroySession(s){
+      if(s && typeof s.destroy === 'function'){
+        try{ s.destroy(); }catch(e){ /* noop */ }
+      }
     }
 
     async function generate(overrideMood){
@@ -480,25 +554,29 @@
         escapeHtml(mood.slice(0,48)) + (mood.length>48?'&hellip;':'') + '</b>&rdquo; &hellip;');
 
       // [REQ 2] Full try/catch/finally around the AI calls.
+      var timedOutInit = false;
+      var timedOutPrompt = false;
       try{
-        console.log('[MooduTools AI] Step 3 · Creating languageModel session...');
-        var session = await window.ai.languageModel.create({
-          systemPrompts: [SYSTEM_PROMPT],
-          temperature: GEN.temperature,
-          topK: GEN.topK
-        });
+        console.log('[DEBUG] Stage 1: Factory checked — probing compatible AI endpoints');
+        var session = await withTimeout(createAISession(), AI_TIMEOUT_INIT, 'session-create');
+        console.log('[DEBUG] Stage 2: Session created ✓');
 
         // [UX 1] Stage 3 — actively coding.
         console.log('[MooduTools AI] Step 4 · Session ready, sending prompt...');
         setStatus('loading',
           '<span class="spinner"></span>&#9889; AI is now coding your customized moving art&hellip;');
+        console.log('[DEBUG] Stage 3: Prompt submitted to session');
 
-        var res = await session.prompt(
-          'User\'s mood: "' + mood + '"\n\n' +
-          'Generate the single-page interactive animated HTML/CSS art for this mood. ' +
-          'Remember: only the raw HTML fragment, no markdown, no commentary.'
+        var res = await withTimeout(
+          session.prompt(
+            'User\'s mood: "' + mood + '"\n\n' +
+            'Generate the single-page interactive animated HTML/CSS art for this mood. ' +
+            'Remember: only the raw HTML fragment, no markdown, no commentary.'
+          ),
+          AI_TIMEOUT_PROMPT, 'session-prompt'
         );
-        session.destroy();
+        destroySession(session);
+        console.log('[DEBUG] Stage 4: Prompt resolved, HTML received');
 
         await typing; // let the typing skeleton finish even for instant responses
 
@@ -516,13 +594,40 @@
         currentSource = 'ai';
         setState('done');
       }catch(err){
+        // Guaranteed escape hatch: never let a pending promise lock the UI.
+        var msg = String((err && err.message) || err);
+        var isInitTimeout  = (msg.indexOf('TIMEOUT') === 0 && msg.indexOf('session-create') !== -1);
+        var isPromptTimeout = (msg.indexOf('TIMEOUT') === 0 && msg.indexOf('session-prompt') !== -1);
+
+        if(isInitTimeout){
+          timedOutInit = true;
+          console.error('[MooduTools AI] SESSION INIT TIMEOUT after ' + AI_TIMEOUT_INIT + 'ms →', err);
+          console.log('[DEBUG] Recovery → restoring UI, showing initialization timeout notice.');
+          setStatus('error',
+            'AI initialization timeout. Checking your browser AI capabilities... ' +
+            '<span style="opacity:.7">(details: ' + escapeHtml(msg) + ')</span>');
+          toast('AI initialization timed out. Please ensure Gemini Nano is fully downloaded in chrome://components.', 'error');
+          return;
+        }
+        if(isPromptTimeout){
+          timedOutPrompt = true;
+          console.error('[MooduTools AI] PROMPT TIMEOUT after ' + AI_TIMEOUT_PROMPT + 'ms →', err);
+          console.log('[DEBUG] Recovery → restoring UI, showing response timeout notice.');
+          setStatus('error',
+            'AI response timed out. Please check if your Chrome Gemini Nano model is fully downloaded in \'chrome://components\'.');
+          toast('AI response timed out. Check chrome://components for the Gemini Nano model.', 'error');
+          return;
+        }
+
         console.error('[MooduTools AI] ERROR during generation →', err);
         toast('Chrome AI Model is still finalizing setup in your browser. Please try again in a few moments or use the \'Live Demo\' presets below.', 'error');
         setStatus('error',
           'Chrome AI Model is still finalizing setup in your browser. Please try again in a few moments or use the <strong>Live Demo</strong> presets below. ' +
-          '<span style="opacity:.7">(details: ' + escapeHtml(String((err && err.message) || err)) + ')</span>');
+          '<span style="opacity:.7">(details: ' + escapeHtml(msg) + ')</span>');
       }finally{
+        // [UX 2] Always hand control back to the user, even on timeout.
         finishGenerate();
+        console.log('[DEBUG] finally → button restored, control returned to user.');
       }
     }
 
@@ -608,8 +713,9 @@
 
     // [REQ 3] Disable the Create button while processing.
     function setBusy(){
+      console.log('[DEBUG] UI → busy. button = "Generating..."');
       goBtn.disabled = true;
-      goBtn.textContent = 'Processing…';
+      goBtn.textContent = 'Generating... (Check Console)';
     }
     function finishGenerate(){
       isBusy = false;
