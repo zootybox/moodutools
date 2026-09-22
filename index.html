@@ -128,6 +128,12 @@
     .state-card .state-msg{color:var(--muted);font-size:15px;margin-bottom:20px}
     .state-card .state-demo{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;padding:12px 22px;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 18px rgba(34,211,238,.3);transition:transform .12s ease}
     .state-card .state-demo:hover{transform:translateY(-2px)}
+    .state-card .state-guide{margin:-8px 0 20px;padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;text-align:left}
+    .state-card .state-guide-title{font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px}
+    .state-card .state-guide ol{margin:0;padding-left:18px}
+    .state-card .state-guide li{font-size:12.5px;color:#a6a6b8;margin-bottom:7px;line-height:1.55}
+    .state-card .state-guide li b{color:var(--text);font-weight:600}
+    .state-card .state-guide code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;color:#7dd3fc;word-break:break-all}
     @media(max-width:520px){.canvas-state .state-stage{font-size:14px}.state-card{padding:26px 20px}}
 
     .canvas-wrap{
@@ -796,11 +802,21 @@
       var msg   = opts.message || 'Your moving art requires Chrome with Gemini Nano enabled.';
       var demo  = (opts.showDemo === false) ? '' :
         '<button type="button" class="state-demo" id="stateDemoBtn">&#10024; Try Live Demo &mdash; no AI needed</button>';
+      var guide = (opts.troubleshoot === false) ? '' :
+        '<div class="state-guide">' +
+          '<div class="state-guide-title">How to enable Gemini Nano</div>' +
+          '<ol>' +
+            '<li>Open <code>chrome://flags/#prompt-api-for-gemini-nano</code> and set it to <b>Enabled</b>.</li>' +
+            '<li>Open <code>chrome://flags/#optimization-guide-on-device-model</code> and set it to <b>Enabled BypassPrefRequirement</b>.</li>' +
+            '<li>Relaunch Chrome, open <code>chrome://components</code>, find <b>Optimization Guide On Device Model</b>, then click <b>Check for update</b>.</li>' +
+          '</ol>' +
+        '</div>';
       stateBox.innerHTML =
         '<div class="state-card">' +
           '<div class="state-ico">&#9888;&#65039;</div>' +
           '<h3 class="state-title">' + escapeHtml(title) + '</h3>' +
           '<p class="state-msg">' + msg + '</p>' +
+          guide +
           demo +
         '</div>';
       var b = document.getElementById('stateDemoBtn');
