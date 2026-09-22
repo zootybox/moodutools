@@ -6,17 +6,84 @@
   <title>About MooduTools — Local Browser-AI Vibe &amp; Story Art Generator</title>
   <meta name="description" content="MooduTools turns your mood into moving HTML/CSS animation art with a local in-browser AI (Gemini Nano). 100% on-device, private, and free.">
   <link rel="canonical" href="https://moodutools.com/about.html">
-  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "name": "About MooduTools",
+        "url": "https://moodutools.com/about.html",
+        "description": "MooduTools turns your mood into moving HTML/CSS animation art with a local in-browser AI (Gemini Nano). 100% on-device, private, and free.",
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "Organization",
+        "name": "MooduTools",
+        "url": "https://moodutools.com/",
+        "description": "An independent engineering project building generative, privacy-first creative software that runs entirely in the browser.",
+        "mission": "Turn feelings into living art using zero-cost, fully on-device AI — with absolute privacy and no data leaving the user's browser.",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "support@moodutools.com",
+          "contactType": "customer support"
+        }
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B10;--surface:#12121A;--surface-2:#181822;--line:#262633;--text:#EDEDF4;--muted:#8A8A9C;--accent:#22D3EE;--accent-2:#A855F7;--radius:16px;--maxw:1080px}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;background:radial-gradient(1100px 620px at 85% -10%,rgba(26,26,46,.9) 0%,rgba(11,11,16,0) 55%),radial-gradient(900px 560px at -10% 20%,rgba(46,16,80,.35) 0%,rgba(11,11,16,0) 55%),var(--bg);min-height:100vh}
+    ::selection{background:rgba(34,211,238,.25)}a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(11,11,16,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}.site-logo span{color:var(--accent)}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+    .site-nav a.active{color:var(--accent);background:rgba(34,211,238,.1)}
+    .hero{text-align:center;padding:60px 0 34px}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);color:#c892ff;font-size:13px;font-weight:600}
+    .hero h1{font-family:'Outfit',sans-serif;font-size:clamp(30px,5vw,48px);font-weight:800;line-height:1.08;margin:20px 0 14px}
+    .hero h1 .grad{background:linear-gradient(90deg,var(--accent),#7c7cff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{color:var(--muted);font-size:17px;max-width:680px;margin:0 auto}
+    .legal{max-width:840px;margin:0 auto;padding-bottom:20px}
+    .mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:36px 0}
+    .mission{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:var(--radius);padding:24px;backdrop-filter:blur(8px);transition:transform .18s ease,border-color .18s ease}
+    .mission:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.4)}
+    .mission .ico{font-size:26px}.mission h3{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;margin:10px 0 6px}.mission p{font-size:14px;color:var(--muted)}
+    .legal h2{font-family:'Outfit',sans-serif;font-size:23px;font-weight:800;margin:40px 0 14px;padding-top:8px}
+    .legal h3{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;margin:26px 0 10px}
+    .legal p{margin-bottom:16px;color:#c6c6d4}.legal ul{margin:0 0 16px 24px;color:#c6c6d4}.legal li{margin-bottom:8px}
+    .legal a{color:var(--accent);font-weight:600}.legal strong{color:var(--text)}
+    .blockquote{border-left:3px solid var(--accent);background:rgba(34,211,238,.05);border-radius:0 12px 12px 0;padding:18px 20px;margin:22px 0;color:var(--muted);font-size:16px}
+    .docs-cta{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(168,85,247,.12));border:1px solid rgba(168,85,247,.4);border-radius:var(--radius);padding:26px;margin:34px 0}
+    .docs-cta h3{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.docs-cta p{color:var(--muted);font-size:14.5px;max-width:520px}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;font-weight:700;font-size:14.5px;padding:12px 22px;border-radius:10px;box-shadow:0 4px 16px rgba(34,211,238,.25);transition:transform .12s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .site-footer{border-top:1px solid var(--line);background:rgba(11,11,16,.55);margin-top:50px}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 0 24px}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}.footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
+    @media(max-width:820px){.mission-grid{grid-template-columns:1fr}.site-nav a{padding:8px 9px;font-size:13px}}
+  </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="header-inner">
+    <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
-      <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
       <nav class="site-nav">
         <a href="/">Home</a>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
         <a href="/about.html" class="active">About</a>
         <a href="/contact.html">Contact</a>
@@ -24,38 +91,65 @@
     </div>
   </header>
 
-  <main class="site-main">
-    <div class="legal-page">
-      <h1>About MooduTools</h1>
-      <p class="updated">A local, browser-AI vibe &amp; story art generator</p>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">&#127912; About MooduTools</span>
+      <h1>We turn feelings into <span class="grad">living art</span></h1>
+      <p>MooduTools is a free, browser-based generative art studio. Type how you feel, and an on-device AI writes a moving piece of HTML/CSS &mdash; a tiny animated scene and a poetic micro-story &mdash; entirely in your browser.</p>
+    </section>
 
+    <div class="legal">
       <h2>Our Mission</h2>
-      <p>MooduTools was created around a simple idea: <strong>your feelings deserve to move.</strong> Instead of describing a mood with words alone, you type how you feel and an on-device AI immediately writes a unique, animated HTML/CSS piece of art — and a tiny poetic micro-story to go with it.</p>
-      <p>Everything runs inside your browser (Chrome with Gemini Nano). Your mood never leaves your machine, and no account or app is ever required.</p>
+      <p>MooduTools was built around a simple belief: <strong>your feelings deserve to move.</strong> Instead of describing a mood with words alone, you express it, and a local AI immediately renders a unique, animated piece of art. Everything runs inside the browser (Chrome with Gemini Nano). Your mood never leaves your machine, and no account or app is ever required.</p>
 
       <h2>What Makes Us Different</h2>
-      <p>Every experience on MooduTools is built on three principles:</p>
-      <ul>
-        <li><strong>100% On-Device</strong> — The AI generates right on your hardware. What you type or create is never transmitted to a server.</li>
-        <li><strong>Free Forever</strong> — No paywalls, no premium tiers, no hidden charges. Every feature is available to everyone.</li>
-        <li><strong>No Installation</strong> — Open the page, tap a vibe, and watch living art appear. No downloads, no sign-ups.</li>
-      </ul>
+      <div class="mission-grid">
+        <article class="mission">
+          <div class="ico">&#128178;</div>
+          <h3>$0 Infrastructure</h3>
+          <p>We run on static hosting and the AI built into your browser. No inference servers, no GPU fleets, no usage-metered bills &mdash; just edge-delivered code.</p>
+        </article>
+        <article class="mission">
+          <div class="ico">&#128241;</div>
+          <h3>100% On-Device</h3>
+          <p>Gemini Nano executes locally on your hardware. Generation happens in your process, so it is fast, free, and works even offline relative to any AI backend.</p>
+        </article>
+        <article class="mission">
+          <div class="ico">&#128274;</div>
+          <h3>Zero Data Egress</h3>
+          <p>Your mood text and artwork are never transmitted. No fetch, no telemetry, no server logs &mdash; there is genuinely nothing to leak.</p>
+        </article>
+      </div>
+
+      <div class="blockquote">&ldquo;The most private option is also the most cost-effective option. That inversion is the quiet idea at the heart of MooduTools.&rdquo;</div>
 
       <h2>Who We Are</h2>
-      <p>MooduTools is an independent web project by developers and storytellers who believe generative creativity should be approachable, fast, and private. We love the gap between "an emotion" and "a moving picture" — and we built MooduTools to close it.</p>
-<h2>Get in Touch</h2>
-      <p>Have a mood you want turned into art, a question, or feedback? We would love to hear from you. Visit our <a href="/contact.html">Contact page</a> to reach out.</p>
+      <p>MooduTools is an independent engineering project by developers and storytellers who believe generative creativity should be approachable, fast, and private. We live in the gap between &ldquo;an emotion&rdquo; and &ldquo;a moving picture,&rdquo; and we built MooduTools to close it &mdash; one local inference at a time.</p>
+
+      <h2>Our Engineering Philosophy</h2>
+      <p>We treat privacy as a structural property rather than a promise. Every piece of the pipeline &mdash; from the constrained system prompt to the sanitizing parser to the compositor-first rendering &mdash; is designed to keep user data on the device and to keep quality high within that constraint. If you enjoy the craft behind it, our <a href="/blog/">blog</a> and <a href="/docs/index.html">engineering documentation</a> walk through each system in depth.</p>
+
+      <div class="docs-cta">
+        <div>
+          <h3>Explore the technology</h3>
+          <p>Architecture deep-dives into zero-cost on-device inference, privacy guarantees, and the generative CSS art pipeline.</p>
+        </div>
+        <a class="btn" href="/docs/index.html">Read the Docs &rarr;</a>
+      </div>
+
+      <h2>Get in Touch</h2>
+      <p>Have a mood you want turned into art, a question, or feedback? We would love to hear from you. Visit our <a href="/contact.html">Contact page</a> to reach out &mdash; we reply within one to two business days.</p>
     </div>
   </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
+<footer class="site-footer">
+    <div class="footer-inner container">
       <div>
         <div class="footer-brand">Moodu<span>Tools</span></div>
-        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI.</p>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI. Runs 100% on your device &mdash; private, no app, no sign-up.</p>
       </div>
       <div class="footer-links">
         <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
       </div>
       <div class="footer-links">
@@ -66,7 +160,7 @@
         <a href="/terms.html">Terms of Service</a>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2025 MooduTools. All rights reserved.</div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
   </footer>
 </body>
 </html>

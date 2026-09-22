@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero-Cost Infrastructure: Running AI Completely in Client Browsers — MooduTools Docs</title>
+  <meta name="description" content="A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus Chrome Gemini Nano local prompt API, delivering zero server cost, zero network egress, and absolute emotional-data privacy.">
+  <link rel="canonical" href="https://moodutools.com/docs/zero-cost-on-device-architecture.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Zero-Cost Infrastructure: Running AI Completely in Client Browsers",
+        "name": "Zero-Cost Infrastructure: Running AI Completely in Client Browsers",
+        "url": "https://moodutools.com/docs/zero-cost-on-device-architecture.html",
+        "description": "A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus Chrome Gemini Nano local prompt API, delivering zero server cost, zero network egress, and absolute emotional-data privacy.",
+        "inLanguage": "en-US",
+        "datePublished": "2026-09-22",
+        "dateModified": "2026-09-22",
+        "author": {
+          "@type": "Organization",
+          "name": "MooduTools Engineering Team"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MooduTools",
+          "url": "https://moodutools.com/"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://moodutools.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://moodutools.com/docs/index.html" },
+          { "@type": "ListItem", "position": 3, "name": "Zero-Cost Infrastructure: Running AI Completely in Client Browsers", "item": "https://moodutools.com/docs/zero-cost-on-device-architecture.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B10;--surface:#12121A;--surface-2:#181822;--line:#262633;--text:#EDEDF4;--muted:#8A8A9C;--accent:#22D3EE;--accent-2:#A855F7;--maxw:1140px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;background:radial-gradient(1100px 620px at 85% -10%,rgba(26,26,46,.9) 0%,rgba(11,11,16,0) 55%),radial-gradient(900px 560px at -10% 20%,rgba(46,16,80,.35) 0%,rgba(11,11,16,0) 55%),var(--bg);min-height:100vh}
+    ::selection{background:rgba(34,211,238,.25)}a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    b{color:var(--text)}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(11,11,16,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}.site-logo span{color:var(--accent)}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+    .site-nav a.active{color:var(--accent);background:rgba(34,211,238,.1)}
+    .crumb{font-size:13px;color:var(--muted);padding:24px 0 10px}
+    .crumb a{color:var(--accent)}
+    .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding-bottom:40px}
+    .toc{position:sticky;top:88px;align-self:start;border-left:1px solid var(--line);padding-left:18px}
+    .toc h4{font-family:'Outfit',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}
+    .toc a{display:block;font-size:13.5px;color:var(--muted);padding:4px 0;border-left:2px solid transparent;margin-left:-18px;padding-left:18px;transition:all .15s}
+    .toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent)}
+    .article{min-width:0}
+    .article h1{font-family:'Outfit',sans-serif;font-size:clamp(28px,4vw,40px);font-weight:800;line-height:1.12;margin:6px 0 14px}
+    .article .sub{color:var(--muted);font-size:16px;margin-bottom:20px}
+    .article .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:30px}
+    .article .meta b{color:var(--accent);font-weight:600}
+    .article h2{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin:44px 0 14px;padding-top:8px}
+    .article h3{font-family:'Outfit',sans-serif;font-size:19px;font-weight:700;margin:30px 0 10px}
+    .article p{margin-bottom:16px;color:#c6c6d4}
+    .article ul,.article ol{margin:0 0 16px 24px;color:#c6c6d4}
+    .article li{margin-bottom:8px}
+    .article code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:#7dd3fc}
+    .article pre{background:#0e0e15;border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto;margin:18px 0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;line-height:1.6;color:#d8d8e6}
+    .article blockquote{border-left:3px solid var(--accent-2);background:rgba(168,85,247,.07);padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;color:var(--muted)}
+    .article .callout{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:16px 18px;margin:18px 0}
+    .article .callout b{color:var(--accent)}
+    .site-footer{border-top:1px solid var(--line);background:rgba(11,11,16,.55);margin-top:30px}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 0 24px}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}.footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
+    @media(max-width:860px){.layout{grid-template-columns:1fr}
+      .toc{position:static;border-left:none;border-bottom:1px solid var(--line);padding:0 0 14px;margin-bottom:10px}
+      .toc h4{display:none}.toc a{display:inline-block;margin:0 8px 0 0;padding:4px 8px;border:none;border-radius:8px;background:var(--surface-2);font-size:12.5px}
+      .toc a:hover,.toc a.active{border-color:transparent;border:none;background:rgba(34,211,238,.15)}}
+    @media(max-width:520px){.site-nav a{padding:8px 9px;font-size:13px}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="header-inner container">
+      <a href="/" class="site-logo">Moodu<span>Tools</span></a>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/docs/index.html" class="active">Docs</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="crumb"><a href="/docs/index.html">Docs</a> &nbsp;&rarr;&nbsp; Zero-Cost On-Device Architecture</div>
+
+    <div class="layout">
+      <aside class="toc">
+        <h4>On this page</h4>
+        <a href="#overview">1 &middot; Overview</a>
+        <a href="#why">2 &middot; Why Traditional AI Cloud Is Heavy</a>
+        <a href="#hosting">3 &middot; The Static Hosting Layer</a>
+        <a href="#runtime">4 &middot; The Runtime AI Layer</a>
+        <a href="#privacy">5 &middot; The Zero-Egress Guarantee</a>
+        <a href="#lifecycle">6 &middot; Session Lifecycle &amp; Fallbacks</a>
+        <a href="#cost">7 &middot; The Cost Model</a>
+        <a href="#threat">8 &middot; Security &amp; Threat Model</a>
+        <a href="#conclusion">9 &middot; Conclusion</a>
+      </aside>
+
+      <div class="article">
+        <h1>Zero-Cost Infrastructure: Running AI Completely in Client Browsers</h1>
+        <p class="sub">How Cloudflare Pages static hosting and Chrome's Gemini Nano local prompt API combine into a fully serverless generative-AI product with zero egress and absolute privacy.</p>
+        <div class="meta">
+          <span>Category: <b>Architecture &amp; Privacy</b></span>
+          <span>Reading time: <b>~12 min</b></span>
+          <span>Level: <b>Intermediate</b></span>
+        </div>
+
+        <h2 id="overview">1. Overview</h2>
+        <p>Modern consumer AI products are almost universally built on a familiar but expensive pattern: an API gateway in front of an inference service, a queuing layer, GPU autoscaling, observability, and a billing loop. That model delivers extraordinary power, but it also delivers a per-request marginal cost that grows with success, and it concentrates every user's data in a server-side datastore. MooduTools was designed from the first line of code to invert that paradigm.</p>
+        <p>This document walks through the architecture that lets MooduTools operate as a generative product with <b>zero persistent compute</b>, <b>zero model-inference cost</b>, and <b>zero network egress of user mood data</b>. The entire intelligence payload &mdash; the model that turns words into moving art &mdash; is executed not on a rented GPU in a faraway region, but inside the visitor's own Chrome process via the <code>window.ai</code> API and the built-in Gemini Nano model.</p>
+        <div class="callout"><b>Key number:</b> The operational cost difference between hosting one user and hosting one million users is effectively zero. The only moving part with any real budget is static file delivery, which is absorbed by a free static-hosting edge.</div>
+
+        <h2 id="why">2. Why Traditional AI Cloud Infrastructure Feels Heavy</h2>
+        <p>To appreciate the design, it helps to name precisely what a conventional stack adds. A typical "send a prompt to an LLM" product needs: an origin server to authenticate and rate-limit, a load balancer, autoscaling worker pods, an inference runtime with GPU capacity, persistent storage for conversation logs, a caching layer, and an observability/alerting pipeline. Each stage multiplies the cost curve and, more importantly for an emotional-expressiveness product, each stage is a place where user data could be inspected, logged, or breached.</p>
+        <p>MooduTools is deliberately small: a single page, a prompt, a stylesheet. There is no login session to protect, no conversation history to encrypt at rest, and no inference cluster to schedule. Removing the server does not mean removing engineering rigor &mdash; it means relocating trust to the browser's own security model, where data can be processed and immediately discarded without ever crossing a network boundary.</p>
+        <h2 id="hosting">3. The Static Hosting Layer (Cloudflare Pages)</h2>
+        <p>The only piece of the product that is actually hosted is the code itself. Cloudflare Pages serves the HTML, CSS, and JavaScript from its global edge network with a free tier and generous traffic allowance. Because every file is immutable and content-addressed on deployment, caching behavior is deterministic: the edge and the browser both cache aggressively, so repeat visits often cost nothing more than a round trip to the nearest edge node.</p>
+        <p>From a cost-accounting perspective, Pages is ideal because it bills on delivery, not compute. There is no always-on virtual machine and no concurrency ceiling tied to inference. The deployment pipeline is a simple <code>git push</code> that triggers a build, which in practice means a one-developer project can ship production features with the same discipline as a large organization's CD pipeline, but without a single cloud bill line item for model usage.</p>
+        <p>It is important to separate two concerns that many products conflate: <b>caching the static shell</b> and <b>serving live compute</b>. MooduTools uses the edge only for the former. The latter &mdash; token generation &mdash; never touches the edge at all. That division is the entire financial and privacy thesis of the system.</p>
+<h2 id="runtime">4. The Runtime AI Layer (Chrome Gemini Nano &amp; <code>window.ai</code>)</h2>
+        <p>The second half of the architecture is a runtime that Chrome now ships by default for eligible devices. Gemini Nano is a compact instruction-tuned language model bundled into the browser itself. When present, it is exposed through an asynchronous factory API. A robust integration probes the compatibility surface before ever awaiting a promise:</p>
+        <pre>// Compatibility layer — every factory is checked before use.
+const g = window.ai || globalThis.ai || null;
+let session = null;
+
+if (g?.languageModel?.create) {
+  session = await g.languageModel.create({ systemPrompts: [SYSTEM_PROMPT] });
+} else if (g?.createTextSession) {
+  session = await g.createTextSession({ systemPrompt: SYSTEM_PROMPT });
+} else if (g?.createSession) {
+  session = await g.createSession({ systemPrompts: [SYSTEM_PROMPT] });
+}</pre>
+        <p>Location is meaningful. Because the model runs in the rendering process, a prompt executes with millisecond-level network latency, at zero token cost, and under the browser's <code>origin</code> security boundary. There is no API key, no egress firewall exception, and no server it can reach even if a prompt were maliciously crafted. This is fundamentally different from a thin-client chat product: here the weight, the reasoning, and the output all live where the user already is.</p>
+        <h2 id="privacy">5. The Zero-Egress Privacy Guarantee</h2>
+        <p>Privacy claims in software are only meaningful when they can be reduced to facts about packets. MooduTools' guarantee rest on a verifiable property: <b>a user's mood text and the generated artwork never appear in a network frame.</b> Let us trace the packet inventory for a complete generation cycle.</p>
+        <ul>
+          <li><b>Document load.</b> The browser fetches HTML, CSS, JS, and fonts over HTTPS. This is identical to visiting any documentation page.</li>
+          <li><b>Prompt construction.</b> The typed mood is concatenated into a system prompt string in memory. No AJAX, no WebSocket, no fetch. The strings exist only in the page's JavaScript heap.</li>
+          <li><b>Inference.</b> <code>session.prompt()</code> is resolved entirely by the local model. No network request is initiated by the call.</li>
+          <li><b>Rendering.</b> The returned HTML fragment is sanitized and injected into the DOM. Everything renders within the same origin.</li>
+        </ul>
+        <div class="callout"><b>Zero egress:</b> precisely because no <code>fetch()</code>, <code>XMLHttpRequest</code>, or WebSocket is ever invoked with user content, there is no packet to intercept, no server log to subpoena, and no third-party SDK to leak through. The guarantee is structural, not aspirational.</div>
+        <p>This is where the architecture earns its privacy language in a way that a server-side product cannot. A remote LLM provider can promise encryption in transit and at rest, but those promises still route the plaintext through a party that is not the user. On-device inference removes the third party from the threat model by removing the transmission itself.</p>
+
+        <h2 id="lifecycle">6. Session Lifecycle &amp; Fallbacks</h2>
+        <p>Because products must degrade gracefully, the integration distinguishes between "no AI", "AI present but model not yet downloaded", and "AI present and ready." The code checks capability, then establishes a session with a bounded-timeout guard so that a stalled async promise can never hold the UI hostage:</p>
+        <pre>function withTimeout(promise, ms, label) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() =>
+      reject(new Error(`TIMEOUT [${label}] after ${ms}ms`)), ms);
+    promise.then(v => (clearTimeout(t), resolve(v)),
+                 e => (clearTimeout(t), reject(e)));
+  });
+}
+session = await withTimeout(createAISession(), 6000, 'session-create');</pre>
+        <p>When the runtime is absent, the product falls back to hand-curated <code>&ldquo;Live Demo&rdquo;</code> presets &mdash; deterministic CSS compositions that showcase the same rendering engine without the model. The user never sees a dead button; they see a graceful, explained transition between local-intelligence and curated-intelligence modes. This fallback is not an afterthought, but a core part of the architecture, because it keeps the surface trustworthy even on browsers that predate Gemini Nano.</p>
+        <h2 id="cost">7. The Cost Model: From One User to a Million</h2>
+        <p>Consider a conventional hosted AI product: at a modest token price and reasonable prompt length, 100,000 monthly active users might generate tens of thousands of dollars in inference spend. Add GPU autoscaling overhead and cold-start latency, and the unit economics quietly decide what features a small team can offer. MooduTools has a structurally different ledger.</p>
+        <ul>
+          <li><b>Inference cost:</b> $0.00. The user's own hardware performs every forward pass.</li>
+          <li><b>Compute staging:</b> $0.00. There is no runtime, no container, no worker pool.</li>
+          <li><b>Hosting + egress:</b> Static edge delivery on a free tier. Scaling is linear with bytes served, not with intelligence served.</li>
+          <li><b>Privacy risk surface:</b> Effectively zero, because no PII or mood data is collected, stored, or transmitted server-side.</li>
+        </ul>
+        <p>The result is that <b>marginal cost per user approaches zero</b>, which changes product strategy. Features can be shipped for generosity rather than gatekeeping, and the free tier is not a loss-leader &mdash; it is the whole product. For an indie project this is not merely efficient; it is liberating.</p>
+<h2 id="threat">8. Security &amp; Threat Model</h2>
+        <p>A serverless client architecture does not remove security work &mdash; it moves it. The surface that matters now is the browser sandbox and the integrity of the served code. Three controls deserve emphasis.</p>
+        <ul>
+          <li><b>Subresource integrity and a tight <code>Content-Security-Policy</code>.</b> The page pins its own static assets so a compromised CDN cannot silently substitute a malicious script, and restricts sources so no unexpected domain can load code into the page.</li>
+          <li><b>Output sanitization.</b> The model is treated as untrusted. Generated output is scrubbed of <code>&lt;script&gt;</code>, event-handler attributes, and URL schemes like <code>javascript:</code> before it is ever allowed near the DOM. (The rendering side is covered in detail in the companion document on the generative CSS art engine.)</li>
+          <li><b>No third-party SDKs.</b> There are no analytics beacons, ads, or telemetry embeds in the runtime path. Fewer remote parties means a smaller supply chain and no silent data collector acting on the user's behalf.</li>
+        </ul>
+        <blockquote>A remote model provider could still, in principle, be compelled to log prompts. An on-device model removes that class of risk at the root: there is no remote provider holding plaintext, because there is no transmission.</blockquote>
+        <h2 id="conclusion">9. Conclusion</h2>
+        <p>MooduTools is evidence that a generative product does not have to rent intelligence. By serving static code from a free edge and letting Chrome's embedded Gemini Nano do the reasoning inside the visitor's own process, the architecture achieves what most AI startups measure but cannot honestly claim: <b>zero marginal inference cost and zero egress of user emotions.</b></p>
+        <p>The trade-off is a dependency on browser capability distribution. Not every visitor's machine has Gemini Nano yet, so the product ships a curated fallback and a clear compatibility path. But for the growing population that does have it, the experience is indistinguishable from a hosted product with the privateness of a locally installed application. That inversion &mdash; where the most private option is also the most cost-effective option &mdash; is the quiet revolution this architecture represents.</p>
+        <p>Continue to the companion deep-dive to see how the raw text returned by the local model is turned into living, interactive HTML/CSS animation: <a href="/docs/generative-css-art-engine.html" style="color:var(--accent)">From Text to Canvas: The Generative CSS Animation Pipeline</a>.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner container">
+      <div>
+        <div class="footer-brand">Moodu<span>Tools</span></div>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
+        <a href="/blog/">Blog</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
+  </footer>
+</body>
+</html>

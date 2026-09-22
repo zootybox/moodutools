@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://moodutools.com/</loc><lastmod>2026-09-21</lastmod><priority>1.0</priority></url>
-  <url><loc>https://moodutools.com/blog/</loc><lastmod>2026-09-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://moodutools.com/blog/on-device-ai-future-mental-health.html</loc><lastmod>2026-09-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://moodutools.com/blog/turn-emotions-into-abstract-css-art.html</loc><lastmod>2026-09-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://moodutools.com/blog/privacy-first-creative-tools.html</loc><lastmod>2026-09-21</lastmod><priority>0.8</priority></url>
-  <url><loc>https://moodutools.com/about.html</loc><lastmod>2026-09-21</lastmod><priority>0.5</priority></url>
-  <url><loc>https://moodutools.com/contact.html</loc><lastmod>2026-09-21</lastmod><priority>0.5</priority></url>
-  <url><loc>https://moodutools.com/privacy.html</loc><lastmod>2026-09-21</lastmod><priority>0.3</priority></url>
-  <url><loc>https://moodutools.com/terms.html</loc><lastmod>2026-09-21</lastmod><priority>0.3</priority></url>
+  <url><loc>https://moodutools.com/</loc><lastmod>2026-09-22</lastmod><priority>1.0</priority></url>
+  <url><loc>https://moodutools.com/docs/index.html</loc><lastmod>2026-09-22</lastmod><priority>0.7</priority></url>
+  <url><loc>https://moodutools.com/docs/zero-cost-on-device-architecture.html</loc><lastmod>2026-09-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://moodutools.com/docs/generative-css-art-engine.html</loc><lastmod>2026-09-22</lastmod><priority>0.6</priority></url>
+  <url><loc>https://moodutools.com/blog/</loc><lastmod>2026-09-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://moodutools.com/blog/on-device-ai-future-mental-health.html</loc><lastmod>2026-09-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://moodutools.com/blog/turn-emotions-into-abstract-css-art.html</loc><lastmod>2026-09-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://moodutools.com/blog/privacy-first-creative-tools.html</loc><lastmod>2026-09-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://moodutools.com/about.html</loc><lastmod>2026-09-22</lastmod><priority>0.5</priority></url>
+  <url><loc>https://moodutools.com/contact.html</loc><lastmod>2026-09-22</lastmod><priority>0.5</priority></url>
+  <url><loc>https://moodutools.com/privacy.html</loc><lastmod>2026-09-22</lastmod><priority>0.3</priority></url>
+  <url><loc>https://moodutools.com/terms.html</loc><lastmod>2026-09-22</lastmod><priority>0.3</priority></url>
 </urlset>

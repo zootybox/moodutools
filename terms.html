@@ -6,17 +6,61 @@
   <title>Terms of Service — MooduTools</title>
   <meta name="description" content="MooduTools terms of service for the local browser-AI vibe & story art generator: on-device processing, generated-work ownership, and fair use.">
   <link rel="canonical" href="https://moodutools.com/terms.html">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B10;--surface:#12121A;--surface-2:#181822;--line:#262633;--text:#EDEDF4;--muted:#8A8A9C;--accent:#22D3EE;--accent-2:#A855F7;--maxw:1140px}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;background:radial-gradient(1100px 620px at 85% -10%,rgba(26,26,46,.9) 0%,rgba(11,11,16,0) 55%),radial-gradient(900px 560px at -10% 20%,rgba(46,16,80,.35) 0%,rgba(11,11,16,0) 55%),var(--bg);min-height:100vh}
+    ::selection{background:rgba(34,211,238,.25)}a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(11,11,16,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}.site-logo span{color:var(--accent)}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+    .site-nav a.active{color:var(--accent);background:rgba(34,211,238,.1)}
+    .crumb{font-size:13px;color:var(--muted);padding:26px 0 6px}
+    .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding:20px 0 40px}
+    .toc{position:sticky;top:88px;align-self:start;border-left:1px solid var(--line);padding-left:18px}
+    .toc h4{font-family:'Outfit',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}
+    .toc a{display:block;font-size:13.5px;color:var(--muted);padding:4px 0;border-left:2px solid transparent;margin-left:-18px;padding-left:18px;transition:all .15s}
+    .toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent)}
+    .legal{min-width:0}
+    .legal h1{font-family:'Outfit',sans-serif;font-size:clamp(30px,4vw,40px);font-weight:800;line-height:1.1;margin:6px 0 8px}
+    .legal .updated{color:var(--muted);font-size:14px;margin-bottom:26px}
+    .legal h2{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;margin:40px 0 12px;padding-top:8px}
+    .legal p{margin-bottom:15px;color:#c6c6d4}
+    .legal ul,.legal ol{margin:0 0 15px 24px;color:#c6c6d4}.legal li{margin-bottom:7px}
+    .legal a{color:var(--accent);font-weight:600}.legal strong{color:var(--text)}
+    .callout{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:16px 18px;margin:18px 0}
+    .callout b{color:var(--accent)}
+    .contact-box{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(168,85,247,.12));border:1px solid rgba(168,85,247,.4);border-radius:16px;padding:24px;margin-top:30px}
+    .contact-box a{color:#fff}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;font-weight:700;font-size:14.5px;padding:12px 22px;border-radius:10px;box-shadow:0 4px 16px rgba(34,211,238,.25);transition:transform .12s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .site-footer{border-top:1px solid var(--line);background:rgba(11,11,16,.55);margin-top:40px}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 0 24px}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}.footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
+    @media(max-width:860px){.layout{grid-template-columns:1fr}
+      .toc{position:static;border-left:none;border-bottom:1px solid var(--line);padding:0 0 12px;margin-bottom:8px}
+      .toc h4{display:none}.toc a{display:inline-block;margin:0 6px 0 0;padding:4px 8px;border:none;border-radius:8px;background:var(--surface-2);font-size:12.5px}}
+    @media(max-width:520px){.site-nav a{padding:8px 9px;font-size:13px}}
+  </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="header-inner">
+    <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
-      <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
       <nav class="site-nav">
         <a href="/">Home</a>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
         <a href="/about.html">About</a>
         <a href="/contact.html">Contact</a>
@@ -24,66 +68,74 @@
     </div>
   </header>
 
-  <main class="site-main">
-    <div class="legal-page">
-      <h1>Terms of Service</h1>
-      <p class="updated">Last updated: September 2026</p>
+  <main class="container">
+    <div class="crumb"><a href="/">Home</a> &nbsp;&rarr;&nbsp; Terms of Service</div>
+    <div class="layout">
+      <aside class="toc">
+        <h4>On this page</h4>
+        <a href="#use">1 &middot; Use of the Service</a>
+        <a href="#license">2 &middot; On-Device Processing &amp; License</a>
+        <a href="#ownership">3 &middot; Ownership of Output</a>
+        <a href="#acceptable">4 &middot; Acceptable Use</a>
+        <a href="#ip">5 &middot; Intellectual Property</a>
+        <a href="#disclaimers">6 &middot; Disclaimers &amp; Liability</a>
+        <a href="#changes">7 &middot; Changes &amp; Governing Law</a>
+      </aside>
 
-      <p>Welcome to MooduTools. By accessing moodutools.com (the "Site") and using its vibe-art generator (the "Service"), you agree to these Terms of Service ("Terms"). If you do not agree, please do not use the Site.</p>
+      <div class="legal">
+        <h1>Terms of Service</h1>
+        <p class="updated">Last updated: September 2026</p>
+        <p>Welcome to MooduTools. By accessing moodutools.com (the "Site") and using its browser-based vibe-art generator (the "Service"), you agree to these Terms of Service. If you do not agree, please do not use the Site.</p>
 
-      <h2>1. Use of the Service</h2>
-      <p>MooduTools provides a free, browser-based generator that turns a mood into animated HTML/CSS art and micro-stories using an on-device AI (Gemini Nano). You may use the Service for any lawful personal or commercial purpose, including creating shareable art, cards, and clips for events, content, and campaigns.</p>
+        <h2 id="use">1. Use of the Service</h2>
+        <p>MooduTools provides a free, browser-based generator that turns a mood into animated HTML/CSS art and micro-stories using an on-device AI (Gemini Nano). The Service is free to use with no account, email, or payment required, and all features are available directly in the browser.</p>
 
-      <h2>2. On-Device Processing</h2>
-      <p>The Service is designed to run entirely in your browser. Your prompts and generated art are processed locally on your device and are not transmitted to us. This also means the Service requires a compatible browser — currently Chrome with the in-browser AI (Gemini Nano) enabled — to generate bespoke art. Without it, you can still preview the built-in Live Demo presets.</p>
+        <h2 id="license">2. On-Device Processing &amp; License to Use the Software</h2>
+        <p>The Service is designed to run entirely in your browser. Your prompts and generated art are processed locally on your device and are not transmitted to or stored by us. We grant you a personal, non-exclusive, non-transferable, revocable license to use the Service for lawful personal or non-commercial-commercial activities as permitted herein. You may not resell, sublicense, or redistribute the Service itself, its code, or its underlying assets.</p>
 
-      <h2>3. No Account Required</h2>
-      <p>Using the Service requires no account, email, or payment. All features are available directly in the browser.</p>
+        <h2 id="ownership">3. Ownership of &amp; License to Your Output</h2>
+        <p>The art, micro-stories, cards, and clips you create are generated for you. <strong>You may use, share, and publish your generated creations</strong> for personal and commercial purposes as long as you create lawful, non-infringing material. By generating content, you agree that you will only create material you are entitled to make. Because all output is produced locally on your device, we neither own nor store your creations, and the rights granted to you are subject solely to the acceptable-use rules below.</p>
 
-      <h2>4. Ownership of Your Output</h2>
-      <p>The art, micro-stories, cards, and clips you create are yours. We claim no ownership of your generated work. By generating content, you agree that you will only create lawful, non-infringing material.</p>
+        <h2 id="acceptable">4. Acceptable Use</h2>
+        <p>When using the Service, you agree not to:</p>
+        <ul>
+          <li>Generate content for unlawful purposes, or that is defamatory, threatening, obscene, or violates others' rights</li>
+          <li>Attempt to disrupt the Site, its servers, or the experience of other users</li>
+          <li>Use automated scripts to abuse, overload, or scrape the Site in ways inconsistent with its purpose</li>
+        </ul>
+<h2 id="ip">5. Intellectual Property</h2>
+        <p>The Site itself &mdash; text, design, code, logo, and the preset art &mdash; is the property of MooduTools and is protected by applicable laws. You may not reproduce or redistribute the Site's own design or code without permission. Content you generate with the Service is yours as described above. Your use of the Service grants you no rights in any trademarks, logos, or branding of MooduTools beyond their display on the Site.</p>
 
-      <h2>5. Acceptable Use</h2>
-      <p>When using the Service, you agree not to:</p>
-      <ul>
-        <li>Generate content for unlawful purposes, or that is defamatory, threatening, obscene, or violates others' rights</li>
-        <li>Attempt to disrupt the Site, its servers, or the experience of other users</li>
-        <li>Use automated scripts to abuse, overload, or scrape the Site in ways inconsistent with its purpose</li>
-      </ul>
-<h2>6. Intellectual Property</h2>
-      <p>The Site itself — text, design, code, logo, and the preset art — is the property of MooduTools and is protected by applicable laws. You may not reproduce or redistribute the Site's own design or code without permission. Content you generate with the Service is yours as described above.</p>
+        <h2 id="disclaimers">6. Disclaimer of Warranties &amp; Limitation of Liability</h2>
+        <p>The Service is provided "as is" and "as available," without warranties of any kind, express or implied. We do not guarantee uninterrupted, error-free, or bug-free availability, and generation depends on your browser's support for the in-browser AI (Gemini Nano) and its model download status through <code>chrome://components</code>. Use of the Service is at your sole risk.</p>
+        <p>To the fullest extent permitted by law, MooduTools is not liable for indirect, incidental, special, consequential, or punitive damages arising from use of the Site or Service, including loss of downloads, data, or other intangible losses. In no event shall our aggregate liability exceed the amount you paid to use the Service (which is zero).</p>
 
-      <h2>7. Disclaimer of Warranties</h2>
-      <p>The Service is provided "as is" and "as available," without warranties of any kind, express or implied. We do not guarantee uninterrupted, error-free, or bug-free availability, and generation depends on your browser's support for the in-browser AI (Gemini Nano). Use of the Service is at your sole risk.</p>
+        <h2 id="changes">7. Modifications &amp; Governing Law</h2>
+        <p>We may modify or discontinue the Site or any part of the Service at any time without notice. We may also update these Terms from time to time; continued use after changes constitutes acceptance of the new Terms. These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict-of-law principles.</p>
+        <p>If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.</p>
 
-      <h2>8. Limitation of Liability</h2>
-      <p>To the fullest extent permitted by law, MooduTools is not liable for indirect, incidental, special, consequential, or punitive damages arising from use of the Site or Service. This includes loss of downloads, data, or other intangible losses.</p>
+        <div class="callout"><b>Advertising:</b> To keep the Service free, pages may display advertisements from third-party networks (e.g., Google AdSense). We do not control those advertisers' advertisements; any interactions are solely between you and the advertiser, and ad content does not reflect or receive your moods or creations.</div>
 
-      <h2>9. Advertising and Third Parties</h2>
-      <p>To keep the Service free, pages may show advertisements from third-party networks (e.g., Google AdSense). We are not responsible for the content or practices of these advertisers. Interactions with advertisers are solely between you and the advertiser.</p>
-
-      <h2>10. Links</h2>
-      <p>The Site may link to external websites we do not operate. We have no control over their content and are not responsible for their policies or practices.</p>
-
-      <h2>11. Modifications</h2>
-      <p>We may modify or discontinue the Site or any part of the Service at any time without notice. We may also update these Terms from time to time; continued use after changes constitutes acceptance of the new Terms.</p>
-
-      <h2>12. Governing Law</h2>
-      <p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict-of-law principles.</p>
-
-      <h2>13. Contact</h2>
-      <p>Questions about these Terms? Contact us through our <a href="/contact.html">Contact page</a>.</p>
+        <div class="contact-box">
+          <div>
+            <strong>Questions about these Terms?</strong>
+            <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">Reach us and we will respond within 24&ndash;48 business hours.</p>
+          </div>
+          <a class="btn" href="/contact.html">Contact Us &rarr;</a>
+        </div>
+      </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
+    <div class="footer-inner container">
       <div>
         <div class="footer-brand">Moodu<span>Tools</span></div>
-        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI.</p>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI. Runs 100% on your device &mdash; private, no app, no sign-up.</p>
       </div>
       <div class="footer-links">
         <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
       </div>
       <div class="footer-links">
@@ -94,7 +146,7 @@
         <a href="/terms.html">Terms of Service</a>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2025 MooduTools. All rights reserved.</div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
   </footer>
 </body>
 </html>

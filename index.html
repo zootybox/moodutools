@@ -7,6 +7,23 @@
   <title>MooduTools — Turn Your Mood Into Living Art</title>
   <meta name="description" content="Type how you feel and watch an in-browser AI (Gemini Nano) code a unique, moving piece of HTML/CSS animation art or an interactive micro-story — free, private, no app needed.">
   <link rel="canonical" href="https://moodutools.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "MooduTools",
+    "url": "https://moodutools.com/",
+    "applicationCategory": "MultimediaApplication",
+    "applicationSubCategory": "DesignApplication",
+    "operatingSystem": "All (Chrome Built-in AI)",
+    "description": "Turn your mood into living art with an in-browser AI (Gemini Nano). Free, private, and runs 100% on your device.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -33,7 +50,21 @@
       background:rgba(11,11,16,.85);backdrop-filter:blur(12px);
       border-bottom:1px solid var(--line);
     }
-    .header-inner{display:flex}
+    .header-inner{display:flex;align-items:center;justify-content:space-between}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+
+    /* ── Footer ── */
+    .site-footer{margin-top:64px;border-top:1px solid var(--line);background:rgba(11,11,16,.55)}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 24px 24px;max-width:var(--maxw);margin:0 auto}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
+    .footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}
+    .footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
     .site-logo{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.02em}
     .site-logo span{color:var(--accent)}
 
@@ -183,6 +214,13 @@
   <header class="site-header">
     <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/docs/index.html">Docs</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
     </div>
   </header>
 
@@ -880,5 +918,27 @@
     }
   })();
   </script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Moodu<span>Tools</span></div>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI. Runs 100% on your device &mdash; private, no app, no sign-up.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
+        <a href="/blog/">Blog</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
+  </footer>
 </body>
 </html>

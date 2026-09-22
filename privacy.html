@@ -6,17 +6,63 @@
   <title>Privacy Policy — MooduTools</title>
   <meta name="description" content="MooduTools privacy policy: 100% on-device processing, zero server logs. Your moods and generated art never leave your browser.">
   <link rel="canonical" href="https://moodutools.com/privacy.html">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B10;--surface:#12121A;--surface-2:#181822;--line:#262633;--text:#EDEDF4;--muted:#8A8A9C;--accent:#22D3EE;--accent-2:#A855F7;--maxw:1140px}
+    *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;background:radial-gradient(1100px 620px at 85% -10%,rgba(26,26,46,.9) 0%,rgba(11,11,16,0) 55%),radial-gradient(900px 560px at -10% 20%,rgba(46,16,80,.35) 0%,rgba(11,11,16,0) 55%),var(--bg);min-height:100vh}
+    ::selection{background:rgba(34,211,238,.25)}a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(11,11,16,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}.site-logo span{color:var(--accent)}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+    .site-nav a.active{color:var(--accent);background:rgba(34,211,238,.1)}
+    .crumb{font-size:13px;color:var(--muted);padding:26px 0 6px}
+    .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding:20px 0 40px}
+    .toc{position:sticky;top:88px;align-self:start;border-left:1px solid var(--line);padding-left:18px}
+    .toc h4{font-family:'Outfit',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}
+    .toc a{display:block;font-size:13.5px;color:var(--muted);padding:4px 0;border-left:2px solid transparent;margin-left:-18px;padding-left:18px;transition:all .15s}
+    .toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent)}
+    .legal{min-width:0}
+    .legal h1{font-family:'Outfit',sans-serif;font-size:clamp(30px,4vw,40px);font-weight:800;line-height:1.1;margin:6px 0 8px}
+    .legal .updated{color:var(--muted);font-size:14px;margin-bottom:26px}
+    .legal h2{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;margin:40px 0 12px;padding-top:8px}
+    .legal h3{font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;margin:26px 0 8px}
+    .legal p{margin-bottom:15px;color:#c6c6d4}
+    .legal ul,.legal ol{margin:0 0 15px 24px;color:#c6c6d4}.legal li{margin-bottom:7px}
+    .legal a{color:var(--accent);font-weight:600}.legal strong{color:var(--text)}
+    .callout{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:16px 18px;margin:18px 0}
+    .callout.zero{background:rgba(52,211,153,.06);border-color:rgba(52,211,153,.35)}
+    .callout b{color:var(--accent)}.callout.zero b{color:#34d399}
+    .contact-box{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(168,85,247,.12));border:1px solid rgba(168,85,247,.4);border-radius:var(--radius,16px);padding:24px;margin-top:30px}
+    .contact-box a{color:#fff}
+    .btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0B0B10;font-weight:700;font-size:14.5px;padding:12px 22px;border-radius:10px;box-shadow:0 4px 16px rgba(34,211,238,.25);transition:transform .12s ease}
+    .btn:hover{transform:translateY(-2px)}
+    .site-footer{border-top:1px solid var(--line);background:rgba(11,11,16,.55);margin-top:40px}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 0 24px}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}.footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
+    @media(max-width:860px){.layout{grid-template-columns:1fr}
+      .toc{position:static;border-left:none;border-bottom:1px solid var(--line);padding:0 0 12px;margin-bottom:8px}
+      .toc h4{display:none}.toc a{display:inline-block;margin:0 6px 0 0;padding:4px 8px;border:none;border-radius:8px;background:var(--surface-2);font-size:12.5px}}
+    @media(max-width:520px){.site-nav a{padding:8px 9px;font-size:13px}}
+  </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="header-inner">
+    <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
-      <button class="nav-toggle" onclick="document.querySelector('.site-nav').classList.toggle('open')" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
       <nav class="site-nav">
         <a href="/">Home</a>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
         <a href="/about.html">About</a>
         <a href="/contact.html">Contact</a>
@@ -24,59 +70,85 @@
     </div>
   </header>
 
-  <main class="site-main">
-    <div class="legal-page">
-      <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: September 2026</p>
+  <main class="container">
+    <div class="crumb"><a href="/">Home</a> &nbsp;&rarr;&nbsp; Privacy Policy</div>
+    <div class="layout">
+      <aside class="toc">
+        <h4>On this page</h4>
+        <a href="#tl-dr">TL;DR</a>
+        <a href="#zero-egress">Zero Data Egress</a>
+        <a href="#not-collected">What We Do Not Collect</a>
+        <a href="#advertising">Advertising &amp; Third Parties</a>
+        <a href="#cookies">Cookies</a>
+        <a href="#gdpr">GDPR &amp; CCPA Rights</a>
+        <a href="#security">Data Security</a>
+        <a href="#changes">Changes &amp; Contact</a>
+      </aside>
 
-      <h2>TL;DR — 100% On-Device Processing, Zero Server Logs</h2>
-      <p>MooduTools generates your vibe art <strong>entirely inside your browser</strong>. The in-browser AI (Gemini Nano) runs on your own device, so the moods you type and the art you create are <strong>never sent to our servers</strong>. We collect no personal data, keep no server logs of your creations, and have nothing to leak.</p>
+      <div class="legal">
+        <h1>Privacy Policy</h1>
+        <p class="updated">Last updated: September 2026</p>
 
-      <h2>What We Do Not Collect</h2>
-      <p>We do not store, transmit, or log:</p>
-      <ul>
-        <li>Your mood text or prompts</li>
-        <li>Generated art, micro-stories, or downloads</li>
-        <li>Your name, email, or any account details (none are required)</li>
-        <li>Any content you produce with the tool</li>
-      </ul>
+        <div class="callout zero" id="tl-dr"><b>TL;DR &mdash; Zero Data Egress.</b> Your mood text and the artwork you generate are processed entirely in your browser and are <strong>never</strong> transmitted to our servers, stored by us, or shared with anyone. We have nothing to collect, nothing to log, and nothing to leak.</div>
 
-      <h2>The In-Browser AI (Gemini Nano)</h2>
-      <p>Generation is powered by Chrome's built-in Gemini Nano, which executes locally on your device. When you create a vibe, your prompt goes from the page to your own browser's AI model on the same machine — never across the network to us. Because nothing is transmitted, no third party (including us) sees what you create.</p>
+        <h2 id="zero-egress">Zero Data Egress</h2>
+        <p>MooduTools generates its art with the browser's built-in AI (Chrome Gemini Nano), which executes locally on <strong>your device</strong>. When you type a feeling, your prompt travels from the page to your own browser's model on the same machine &mdash; it does not cross the network, reach our servers, or touch any third party. Emotion-computation is deliberately confined to your hardware: no packet, no server log, no external callback.</p>
+        <p>This policy describes how we operate even where standard web technologies (cookies or third-party tools) may be present, and the rights you have under data-protection law.</p>
+<h2 id="not-collected">What We Do Not Collect</h2>
+        <p>We do not store, transmit, or otherwise process:</p>
+        <ul>
+          <li>Your mood text or prompts</li>
+          <li>Generated art, micro-stories, or downloads</li>
+          <li>Your name, email, or any account details (none are required)</li>
+          <li>Any content you produce with the tool</li>
+        </ul>
+        <p>Because the service requires no account and performs all reasoning locally, there is no personal profile, no usage history tied to you, and no backend datastore holding your creations.</p>
 
-      <h2>Anonymous Site Statistics</h2>
-      <p>Like most websites, we may use standard, privacy-conscious analytics to measure aggregate page visits. These anonymous counts help us improve the site and do not identify you or capture your creations. To avoid it entirely, you can enable your browser's Do-Not-Track or use a private window.</p>
-<h2>Advertising</h2>
-      <p>To keep MooduTools free, our pages may display advertisements (for example, Google AdSense). Ad networks may use cookies to serve relevant ads across the web. These relate to your browser's advertising profile, not to your moods or creations. You can opt out of personalized ads at <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>.</p>
+        <h2 id="advertising">Advertising &amp; Third-Party Vendors</h2>
+        <p>To keep MooduTools free, our pages may display advertisements served by third-party advertising networks, such as Google AdSense. These networks may use <strong>cookies</strong> and other device-identification technologies to measure ad performance and to serve relevant ads across the web, in accordance with their own privacy policies. This activity relates to your browser's general advertising profile &mdash; it is unrelated to your moods or creations, which never leave your device.</p>
+        <p>You can learn more about how Google uses data when you use its partners' sites, and opt out of personalized advertising, at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">Google's Data Usage &amp; Ads</a> and <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>.</p>
 
-      <h2>Cookies</h2>
-      <p>We do not use cookies for tracking your creations. Cookies on the site are limited to those set by our advertising and analytics partners described above. You can clear or block cookies through your browser settings at any time.</p>
+        <h2 id="cookies">Cookies</h2>
+        <p>We do not set or use cookies to track your creations. Any cookies on the site are limited to those set by the advertising and analytics partners described above, for standardized purposes such as frequency capping and campaign measurement. You can clear or block cookies at any time through your browser settings; doing so will not affect the core on-device art generator.</p>
+        <p>For European visitors, we treat advertising preferences in line with the ePrivacy Directive and GDPR requirements, including transparency, purpose limitation, and, where required, mechanisms to give or withhold consent through your browser or the ad network's controls.</p>
 
-      <h2>Third-Party Links</h2>
-      <p>Our pages may link to external sites or applications. We are not responsible for the privacy practices or content of those third parties. We encourage you to review their policies before engaging with them.</p>
+        <h2 id="gdpr">Your Rights (GDPR &amp; CCPA)</h2>
+        <p>Under the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA), you have rights over your personal data. Because we do not collect your moods or creations, most of these rights are, by design, already maximally honored. Where third-party ad networks handle identifiers, you may still exercise these rights with respect to them:</p>
+        <ul>
+          <li><strong>Access &amp; Portability</strong> &mdash; request a copy of data a data controller holds about you.</li>
+          <li><strong>Deletion</strong> &mdash; request erasure of your personal data ("right to be forgotten").</li>
+          <li><strong>Rectification</strong> &mdash; correct inaccurate personal data.</li>
+          <li><strong>Restriction &amp; Objection</strong> &mdash; restrict processing or object to processing for advertising.</li>
+          <li><strong>Opt-out of "sales"/sharing</strong> &mdash; under the CCPA, ask that your personal information not be sold or shared. We do not sell personal information.</li>
+        </ul>
+        <p>To exercise any of these rights, or to learn which of our advertising partners process identifiers, contact us at <a href="mailto:support@moodutools.com">support@moodutools.com</a>. We will respond within the legally required timeframe and never penalize you for exercising your rights.</p>
 
-      <h2>Data Security</h2>
-      <p>Because your mood and art never leave your device, the strongest guarantee we can give is simple: there is no stored data to be exposed. Any settings your browser keeps locally, such as cached pages, can be cleared through your browser's privacy settings.</p>
+        <h2 id="security">Data Security</h2>
+        <p>Because your mood and art never leave your device, the strongest guarantee we can offer is simple: there is no stored data to be exposed. Any locally cached pages or settings can be cleared through your browser's privacy controls. Where third-party ad networks operate, we rely on their contractual and technical obligations, and we minimize our own processing accordingly.</p>
 
-      <h2>Children's Privacy</h2>
-      <p>Our site is not directed to children under 13 and we do not knowingly collect personal information from anyone. If you believe a child has interacted with the site, please contact us and we will take appropriate steps.</p>
+        <h2 id="changes">Changes to This Policy</h2>
+        <p>We may update this Privacy Policy from time to time. Changes will be posted here with an updated "Last updated" date. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
 
-      <h2>Changes to This Policy</h2>
-      <p>We may update this Privacy Policy from time to time. Changes will be posted here with an updated "Last updated" date. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
-
-      <h2>Contact Us</h2>
-      <p>Questions about this policy or your privacy? Contact us through our <a href="/contact.html">Contact page</a>.</p>
+        <div class="contact-box">
+          <div>
+            <strong>Questions about this policy or your privacy?</strong>
+            <p style="color:var(--muted);font-size:14.5px;margin:4px 0 0">Email us and we will respond within 24&ndash;48 business hours.</p>
+          </div>
+          <a class="btn" href="mailto:support@moodutools.com">Contact &#128231;</a>
+        </div>
+      </div>
     </div>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
+    <div class="footer-inner container">
       <div>
         <div class="footer-brand">Moodu<span>Tools</span></div>
-        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI.</p>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI. Runs 100% on your device &mdash; private, no app, no sign-up.</p>
       </div>
       <div class="footer-links">
         <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
         <a href="/blog/">Blog</a>
       </div>
       <div class="footer-links">
@@ -87,7 +159,7 @@
         <a href="/terms.html">Terms of Service</a>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2025 MooduTools. All rights reserved.</div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
   </footer>
 </body>
 </html>

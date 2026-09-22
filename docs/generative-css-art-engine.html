@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>From Text to Canvas: The Generative CSS Animation Pipeline — MooduTools Docs</title>
+  <meta name="description" content="A deep engineering document on MooduTools' rendering engine: parsing an on-device LLM's poetic text and emotion parameters into pure HTML5/CSS interactive keyframe animations, sanitized and injected at runtime.">
+  <link rel="canonical" href="https://moodutools.com/docs/generative-css-art-engine.html">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "From Text to Canvas: The Generative CSS Animation Pipeline",
+        "name": "From Text to Canvas: The Generative CSS Animation Pipeline",
+        "url": "https://moodutools.com/docs/generative-css-art-engine.html",
+        "description": "A deep engineering document on MooduTools' rendering engine: parsing an on-device LLM's poetic text and emotion parameters into pure HTML5/CSS interactive keyframe animations, sanitized and injected at runtime.",
+        "inLanguage": "en-US",
+        "datePublished": "2026-09-22",
+        "dateModified": "2026-09-22",
+        "author": {
+          "@type": "Organization",
+          "name": "MooduTools Engineering Team"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "MooduTools",
+          "url": "https://moodutools.com/"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://moodutools.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://moodutools.com/docs/index.html" },
+          { "@type": "ListItem", "position": 3, "name": "From Text to Canvas: The Generative CSS Animation Pipeline", "item": "https://moodutools.com/docs/generative-css-art-engine.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0B0B10;--surface:#12121A;--surface-2:#181822;--line:#262633;--text:#EDEDF4;--muted:#8A8A9C;--accent:#22D3EE;--accent-2:#A855F7;--maxw:1140px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);line-height:1.75;-webkit-font-smoothing:antialiased;background:radial-gradient(1100px 620px at 85% -10%,rgba(26,26,46,.9) 0%,rgba(11,11,16,0) 55%),radial-gradient(900px 560px at -10% 20%,rgba(46,16,80,.35) 0%,rgba(11,11,16,0) 55%),var(--bg);min-height:100vh}
+    ::selection{background:rgba(34,211,238,.25)}a{color:inherit;text-decoration:none}
+    .container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+    b{color:var(--text)}
+    .site-header{position:sticky;top:0;z-index:50;background:rgba(11,11,16,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+    .site-logo{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em}.site-logo span{color:var(--accent)}
+    .site-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .site-nav a{font-size:14px;font-weight:500;color:var(--muted);padding:8px 13px;border-radius:10px;transition:all .18s}
+    .site-nav a:hover{color:var(--text);background:var(--surface-2)}
+    .site-nav a.active{color:var(--accent);background:rgba(34,211,238,.1)}
+    .crumb{font-size:13px;color:var(--muted);padding:24px 0 10px}
+    .crumb a{color:var(--accent)}
+    .layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding-bottom:40px}
+    .toc{position:sticky;top:88px;align-self:start;border-left:1px solid var(--line);padding-left:18px}
+    .toc h4{font-family:'Outfit',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}
+    .toc a{display:block;font-size:13.5px;color:var(--muted);padding:4px 0;border-left:2px solid transparent;margin-left:-18px;padding-left:18px;transition:all .15s}
+    .toc a:hover,.toc a.active{color:var(--accent);border-color:var(--accent)}
+    .article{min-width:0}
+    .article h1{font-family:'Outfit',sans-serif;font-size:clamp(28px,4vw,40px);font-weight:800;line-height:1.12;margin:6px 0 14px}
+    .article .sub{color:var(--muted);font-size:16px;margin-bottom:20px}
+    .article .meta{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:30px}
+    .article .meta b{color:var(--accent);font-weight:600}
+    .article h2{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin:44px 0 14px;padding-top:8px}
+    .article h3{font-family:'Outfit',sans-serif;font-size:19px;font-weight:700;margin:30px 0 10px}
+    .article p{margin-bottom:16px;color:#c6c6d4}
+    .article ul,.article ol{margin:0 0 16px 24px;color:#c6c6d4}
+    .article li{margin-bottom:8px}
+    .article code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;color:#7dd3fc}
+    .article pre{background:#0e0e15;border:1px solid var(--line);border-radius:12px;padding:18px;overflow-x:auto;margin:18px 0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:13px;line-height:1.6;color:#d8d8e6}
+    .article blockquote{border-left:3px solid var(--accent-2);background:rgba(168,85,247,.07);padding:14px 18px;border-radius:0 10px 10px 0;margin:18px 0;color:var(--muted)}
+    .article .callout{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.3);border-radius:12px;padding:16px 18px;margin:18px 0}
+    .article .callout b{color:var(--accent)}
+    .article .demo-chip{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;color:#7dd3fc;background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.3);margin:0 4px 0 0}
+    .site-footer{border-top:1px solid var(--line);background:rgba(11,11,16,.55);margin-top:30px}
+    .footer-inner{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding:40px 0 24px}
+    .footer-brand{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}.footer-brand span{color:var(--accent)}
+    .footer-desc{font-size:13px;color:var(--muted);max-width:260px;line-height:1.6}
+    .footer-links h4{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;color:var(--muted)}
+    .footer-links a{display:block;font-size:14px;color:var(--muted);padding:4px 0;transition:color .18s}.footer-links a:hover{color:var(--accent)}
+    .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
+    @media(max-width:860px){.layout{grid-template-columns:1fr}
+      .toc{position:static;border-left:none;border-bottom:1px solid var(--line);padding:0 0 14px;margin-bottom:10px}
+      .toc h4{display:none}.toc a{display:inline-block;margin:0 8px 0 0;padding:4px 8px;border:none;border-radius:8px;background:var(--surface-2);font-size:12.5px}
+      .toc a:hover,.toc a.active{border-color:transparent;border:none;background:rgba(34,211,238,.15)}}
+    @media(max-width:520px){.site-nav a{padding:8px 9px;font-size:13px}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="header-inner container">
+      <a href="/" class="site-logo">Moodu<span>Tools</span></a>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/docs/index.html" class="active">Docs</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="crumb"><a href="/docs/index.html">Docs</a> &nbsp;&rarr;&nbsp; The Generative CSS Animation Pipeline</div>
+
+    <div class="layout">
+      <aside class="toc">
+        <h4>On this page</h4>
+        <a href="#overview">1 &middot; Overview</a>
+        <a href="#prompt">2 &middot; Constraining the Model</a>
+        <a href="#parse">3 &middot; Parsing &amp; Sanitization</a>
+        <a href="#emotion">4 &middot; Emotion to Parameters</a>
+        <a href="#render">5 &middot; Runtime Rendering</a>
+        <a href="#performance">6 &middot; Performance &amp; Resilience</a>
+        <a href="#conclusion">7 &middot; Conclusion</a>
+      </aside>
+
+      <div class="article">
+        <h1>From Text to Canvas: The Generative CSS Animation Pipeline</h1>
+        <p class="sub">How MooduTools turns the raw text emitted by an on-device LLM into living, interactive HTML5/CSS animations &mdash; without a canvas API, without WebGL, and without trusting anything the model says.</p>
+        <div class="meta">
+          <span>Category: <b>Rendering &amp; CSS Animation</b></span>
+          <span>Reading time: <b>~12 min</b></span>
+          <span>Level: <b>Intermediate</b></span>
+        </div>
+
+        <h2 id="overview">1. Overview</h2>
+        <p>The companion architecture document described <em>where</em> MooduTools runs. This document describes <em>what it makes</em>. When a user types a mood, an on-device model returns a block of raw text. That text is meant to be a self-contained fragment of HTML and CSS: a little stage of divs, gradients, and <code>@keyframes</code> that produces a moving, expressive picture. The interesting engineering lives in how that text is produced responsibly, parsed safely, parameterized by emotion, and rendered at 60 frames per second &mdash; all inside a single origin with no external assets.</p>
+        <p>Two constraints shape everything. First, the output must be <b>safe</b>: we are injecting code that originated from a generative model, so it is treated as untrusted until proven inert. Second, the output must be <b>expressive</b>: because we aim for emotional resonance rather than data visualization, the pipeline speaks in motion, easing, light, and rhythm rather than axes and labels.</p>
+
+        <h2 id="prompt">2. Constraining the Model Before It Speaks</h2>
+        <p>The safest code is code the model is asked to produce under a strict contract. The system prompt is a deterministic specification, not a wish. It tells the model that it is a frontend developer and storyteller, that it must return <b>only</b> a raw HTML fragment with no markdown fences, no explanation, and no commentary, and that the fragment must be a single self-contained scene with inline CSS. Tightening the prompt at the source reduces the burden on the sanitizer downstream.</p>
+        <pre>const SYSTEM_PROMPT =
+  'You are an expert creative frontend developer and storyteller... ' +
+  'Output ONLY the raw executable HTML/CSS. ' +
+  'No markdown, no code fences, no explanations, no commentary.';
+  
+  // The user mood is appended at request time:
+  `User's mood: "${mood}". Generate the art for this mood.`</pre>
+        <p>A secondary, equally important part of the contract is determinism of shape. The model is expected to return meaningful text to author a micro-story, but the <em>visual</em> result must always be expressible as plain CSS keyframes &mdash; no canvas rasterization, no WebGL shaders, no external fonts or images. This constraint is what keeps the whole pipeline offline and dependency-free, and it is what lets a single static page render the model's imagination using only the compositor thread.</p>
+
+        <h2 id="parse">3. Parsing &amp; Sanitization</h2>
+        <p>Once the text arrives, the pipeline performs a defensive parse. A naive approach would inject the string straight into <code>innerHTML</code>; a competent one treats the model as an attacker.</p>
+        <pre>function cleanOutput(raw) {
+  if (typeof raw !== 'string') return '';
+  let out = raw;
+  // 1) Strip fenced code blocks and stray backticks.
+  out = out.replace(/```[\s\S]*?```/g, '').replace(/```/gi, '');
+  // 2) Hard-remove any script element, no exceptions.
+  out = out.replace(/<script[\s\S]*?<\/script>/gi, '');
+  // 3) Keep only the outermost printable fragment.
+  const start = out.indexOf('<div');
+  const end   = out.lastIndexOf('</div>');
+  if (start !== -1 && end !== -1 && end > start) {
+    out = out.slice(start, end + '</div>'.length);
+  }
+  return out.trim();
+}</pre>
+        <p>This single function collapses several classes of risk at once. Stripping fenced blocks removes markdown that would otherwise render as visible or break the DOM. Stripping <code>&lt;script&gt;</code> (and its case variations) neutralizes the most dangerous payload. Slicing between the first and last <code>&lt;div&gt;</code> discards surrounding prose the model may have accidentally leaked. In production this is reinforced by a strict Content-Security-Policy that forbids inline event handlers and <code>javascript:</code> URLs as a belt-and-suspenders layer, and every injected node is created through the DOM rather than parsed through sugar so that attributes like <code>onerror</code> have no execution path.</p>
+<h2 id="emotion">4. Emotion to Parameters</h2>
+        <p>Pure LLM output is expressive but non-deterministic. Two people typing &ldquo;joy&rdquo; within seconds of each other get different fragments, and that variety is part of the charm. Yet the pipeline also needs a stable, reproducible mapping from an emotion word to concrete motion parameters for those browsers and cases where the model is unavailable. This is where the <em>emotion-parameter layer</em> sits.</p>
+        <p>Curated presets map each supported emotion to a profile of CSS design tokens: a palette, a keyframe signature, easing curves, and a density of moving elements. A &ldquo;joyful&rdquo; profile might lean on fast springlike easing, warm saturated hues, and bouncy translate/scale keyframes. A &ldquo;melancholic&rdquo; profile prefers slow <code>cubic-bezier</code> fades, desaturated cool tones, and drifting vertical motion that reads like rain or memory.</p>
+        <pre>const EMOTION = {
+  joyful:     { easing: 'cubic-bezier(.2, 1.4, .4, 1)', duration: '1.6s', hues: 'sunrise'  },
+  melancholic:{ easing: 'ease-in-out',                  duration: '5s',   hues: 'dusk'     },
+  energized:  { easing: 'cubic-bezier(.1,.9,.2,1)',     duration: '1.1s', hues: 'electric' },
+};</pre>
+        <p>A design token is a named decision. Expressing emotion as tokens rather than hard-coded values means the raw CSS the model returns and the curated presets can share the same visual language: both speak in easing curves, hue ramps, and keyframe timings. When the on-device model is present, the model chooses freely within its system-prompt contract; when it is absent, the preset system reproduces the same genre of motion from the same semantic vocabulary. This unification is what lets a visitor switch seamlessly between an AI-generated scene and a live demo without noticing a seam in the rendering engine.</p>
+        <h2 id="render">5. Runtime Rendering</h2>
+        <p>Rendering is deliberately boring, and that is a feature. After sanitization, the fragment is injected into an offscreen container and the browser's layout and compositor take over:</p>
+        <pre>canvas.hidden = false;
+canvas.innerHTML = html;            // sanitized bottleneck
+runCanvasAnimations();              // force a reflow so @keyframes start cleanly
+
+function runCanvasAnimations() {
+  canvas.style.display = 'none';
+  void canvas.offsetHeight;         // flush layout
+  canvas.style.display = '';
+}</pre>
+        <p>The <code>void canvas.offsetHeight</code> line deserves explanation. CSS keyframes authored inside a dynamically injected node sometimes fail to start because the browser batches style and layout changes. Touching the offsetHeight forces a synchronous reflow, guaranteeing the compositor recognizes the new animation frames and that stagger delays begin exactly where intended. It is a tiny, unglamorous instruction with an outsized effect on perceived polish.</p>
+        <p>Because the art is pure CSS, nearly all animation work is offloaded to the browser's compositor thread rather than blocked on the JavaScript event loop. Transforms, opacity, and filter animations run on their own thread, so even elaborate scenes keep the main thread free to handle the surrounding interactions &mdash; saving the story card, capturing a clip, or recasting the mood. The page couples generative content to a fully responsive UI, which is precisely the behavior users read as &ldquo;smooth.&rdquo;</p>
+        <h2 id="performance">6. Performance &amp; Resilience</h2>
+        <p>Four pragmatic rules keep rendering both fast and resilient in production:</p>
+        <ul>
+          <li><b>Prefetched motion tokens.</b> Easing curves and hue ramps are defined once in a shared stylesheet, so the model reuses names rather than inventing raw numbers on every generation.</li>
+          <li><b>Bounded recasts.</b> A busy-lock prevents overlapping generations. An in-flight request ignores duplicate clicks, and a timed-out promise restores the button so the interface never dead-ends.</li>
+          <li><b>Compositor-first animations.</b> Keyframes animate <code>transform</code> and <code>opacity</code> rather than layout-affecting properties like <code>top</code> or <code>width</code>, which keeps frame rate stable even on modest hardware.</li>
+          <li><b>Deterministic failure text.</b> If the model returns nothing renderable, the pipeline surfaces a clear, actionable message and points users to the curated presets rather than showing a broken frame.</li>
+        </ul>
+        <blockquote>Expression is bounded by physics, not by imagination. By steering the generative output toward compositor-friendly properties, the pipeline can afford grand scenes &mdash; dozens of drifting, glowing elements &mdash; without trading away responsiveness.</blockquote>
+<h2 id="conclusion">7. Conclusion</h2>
+        <p>The generative CSS animation pipeline is the bridge between an on-device model's poetic text and a living picture worth feeling. It constrains the model with a disciplined prompt, sanitizes its output with a paranoid parser, expresses emotion through a shared token vocabulary, and delegates the actual motion to the browser's compositor. Nothing leaves the device, nothing external is loaded, and nothing the model produces is ever trusted blindly.</p>
+        <p>The result is a system that is simultaneously fast, private, and surprisingly expressive: a full generative art experience delivered as a handful of static files and a single in-browser model. For engineers, it is a working demonstration that on-device AI need not mean diminished craft &mdash; only more constrained surfaces, and more deliberate design within them.</p>
+        <p>Reviewed from the top of the stack, start with the full system context in <a href="/docs/zero-cost-on-device-architecture.html" style="color:var(--accent)">Zero-Cost Infrastructure: Running AI Completely in Client Browsers</a>.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner container">
+      <div>
+        <div class="footer-brand">Moodu<span>Tools</span></div>
+        <p class="footer-desc">Free generative vibe art, powered by a local in-browser AI.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <a href="/docs/index.html">Docs</a>
+        <a href="/blog/">Blog</a>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/terms.html">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
+  </footer>
+</body>
+</html>
