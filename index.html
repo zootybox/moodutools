@@ -136,6 +136,35 @@
     .state-card .state-guide code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;color:#7dd3fc;word-break:break-all}
     @media(max-width:520px){.canvas-state .state-stage{font-size:14px}.state-card{padding:26px 20px}}
 
+    /* ── AI Setup Modal (dark glass, privacy-first) ── */
+    .hidden{display:none!important}
+    .ai-modal{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+    .ai-modal[hidden]{display:none}
+    .ai-modal-overlay{position:absolute;inset:0;background:rgba(6,6,10,.72);backdrop-filter:blur(6px)}
+    .ai-modal-card{position:relative;width:100%;max-width:560px;max-height:92vh;overflow:auto;background:rgba(18,18,26,.94);border:1px solid var(--line);border-radius:var(--radius);padding:30px 28px;backdrop-filter:blur(14px);box-shadow:0 24px 70px rgba(0,0,0,.5)}
+    .ai-modal-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .ai-modal-ico{font-size:22px}
+    .ai-modal-badge{font-size:12px;font-weight:600;color:#c892ff;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.35);padding:4px 10px;border-radius:999px}
+    .ai-modal-card h3{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px}
+    .ai-modal-privacy{font-size:13px;color:#7dd3fc;background:rgba(34,211,238,.07);border:1px solid rgba(34,211,238,.3);border-radius:10px;padding:10px 12px;margin:0 0 16px;line-height:1.55}
+    .ai-modal-sub{font-size:14px;color:var(--muted);margin-bottom:14px}
+    .ai-guide{list-style:none;margin:0;padding:0}
+    .ai-guide li{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .ai-guide li:last-child{border-bottom:none;margin-bottom:4px}
+    .ai-step-txt{font-size:13px;color:#c6c6d4;line-height:1.55}
+    .ai-step-txt code{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:11.5px;background:var(--surface-2);border:1px solid var(--line);padding:2px 6px;border-radius:5px;color:#7dd3fc;word-break:break-all}
+    .ai-step-txt b{color:var(--text)}
+    .ai-copy{align-self:flex-start;font-size:12.5px;font-weight:600;color:var(--accent);background:transparent;border:1px solid var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer;transition:.15s}
+    .ai-copy:hover{background:rgba(34,211,238,.12)}
+    .ai-copy.copied{color:#34d399;border-color:#34d399}
+    .ai-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .ai-dl-row{display:flex;align-items:center;gap:12px;margin:6px 0 14px;color:var(--text);font-size:15px;font-weight:600}
+    .ai-progress{width:100%;height:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;overflow:hidden}
+    .ai-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .5s ease;border-radius:999px}
+    .ai-progress-note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5}
+    .ai-close{position:absolute;top:14px;right:16px;background:transparent;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
+    .ai-close:hover{color:var(--text)}
+
     .canvas-wrap{
       background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
       min-height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -361,7 +390,8 @@
 
     // UI references (deferred until the DOM below is parsed)
     var input, goBtn, status, canvas, ph, stateBox, shareBtn,
-        recastBtn, saveCardBtn, clipBtn, demoToggleBtn, demoChips;
+        recastBtn, saveCardBtn, clipBtn, demoToggleBtn, demoChips,
+        aiModal, aiSteps, aiDl, aiProgBar, aiProgNote;
 
     // Current generation context (used by "Re-cast" & demo mode)
     var currentMood = '';
@@ -371,6 +401,9 @@
     // Race-condition guard & toast timer
     var isBusy = false;
     var toastTimer = null;
+    // Mood held while the enable-AI modal is open, so we can auto-resume after setup.
+    var pendingMood = '';
+    var copyBtnTimer = null;
 
     function wireUI(){
       input    = document.getElementById('moodInput');
@@ -379,6 +412,11 @@
       canvas   = document.getElementById('canvas');
       ph       = document.getElementById('placeholder');
       stateBox = document.getElementById('canvasState');
+      aiModal    = document.getElementById('aiModal');
+      aiSteps    = document.getElementById('aiSteps');
+      aiDl       = document.getElementById('aiDl');
+      aiProgBar  = document.getElementById('aiProgBar');
+      aiProgNote = document.getElementById('aiProgNote');
       shareBtn = document.getElementById('shareBtn');
       recastBtn= document.getElementById('recastBtn');
       saveCardBtn = document.getElementById('saveCardBtn');
@@ -399,6 +437,18 @@
         b.addEventListener('click', function(){ playDemo(b.dataset.demo); });
       });
       recastBtn.addEventListener('click', recast);
+
+      // ── AI setup modal wiring ──
+      document.getElementById('aiCloseBtn').addEventListener('click', closeAiSetupModal);
+      aiModal.querySelector('.ai-modal-overlay').addEventListener('click', closeAiSetupModal);
+      document.getElementById('aiDemoBtn').addEventListener('click', function(){
+        closeAiSetupModal();
+        playRandomDemo();
+      });
+      document.getElementById('aiRetryBtn').addEventListener('click', retryAiSetup);
+      Array.prototype.forEach.call(aiModal.querySelectorAll('.ai-copy'), function(b){
+        b.addEventListener('click', function(){ copyAiLink(b.getAttribute('data-copy'), b); });
+      });
     }
 
     // Strip markdown fences, script tags, and surrounding prose so ONLY
@@ -573,6 +623,7 @@
       }
 
       if(isBusy){ console.log('[MooduTools AI] Busy — ignoring repeat click.'); return; }
+      pendingMood = mood;
       isBusy = true;
       setBusy();
 
@@ -580,21 +631,10 @@
       setStatus('loading', '&#128260; Connecting to Local Browser AI&hellip;');
       console.log('[MooduTools AI] Step 1 · Connecting...');
 
-      if(!aiAvailable()){
-        console.error('[MooduTools AI] window.ai / languageModel unavailable.');
-        finishGenerate();
-        setStatus('info',
-          'AI not detected &mdash; choose a <strong>Live Demo</strong> below, or enable Gemini Nano to generate your own.');
-        showCanvasError({
-          title: 'Local Browser AI Not Detected',
-          message: 'Your moving art requires Chrome with Gemini Nano enabled. ' +
-                   'Enable the in-browser model in Chrome Settings &rarr; Advanced &rarr; Experimental AI, ' +
-                   'or jump straight into a preset below.',
-          showDemo: true
-        });
-        return;
+      if(!(await ensureAiReady())){
+        return; // setup modal is open (guide or downloading); button already restored
       }
-      console.log('[MooduTools AI] Gemini Nano available ✓');
+      console.log('[MooduTools AI] Gemini Nano ready ✓');
 
       reset();
 
@@ -868,6 +908,113 @@
       goBtn.textContent = 'Create it →';
     }
 
+    // ── AI enablement modal (privacy-first, security-compliant) ──
+    function openAiSetupModal(mode){
+      stopCanvasLoading();
+      var downloading = (mode === 'downloading');
+      aiSteps.hidden = downloading;
+      aiDl.hidden = !downloading;
+      if(downloading) setDownloadProgress(0);
+      aiModal.hidden = false;
+      document.body.style.overflow = 'hidden'; // lock page scroll behind the modal
+    }
+    function closeAiSetupModal(){
+      aiModal.hidden = true;
+      document.body.style.overflow = '';
+    }
+    function setDownloadProgress(pct){
+      pct = Math.max(0, Math.min(100, pct));
+      if(aiProgBar) aiProgBar.style.width = pct + '%';
+      if(aiProgNote) aiProgNote.textContent = pct + '% — first download may take a few minutes. Nothing is uploaded; the model stays on your device.';
+    }
+    // Copy a chrome:// address to the clipboard; we never change flags for the user.
+    function copyAiLink(addr, btn){
+      var ok = function(){
+        if(copyBtnTimer) clearTimeout(copyBtnTimer);
+        btn.classList.add('copied');
+        btn.textContent = '✓ Copied! Paste in a new tab';
+        copyBtnTimer = setTimeout(function(){ btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 2600);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(addr).then(ok, function(){ ok(); });
+      } else {
+        ok(); // graceful fallback for non-secure contexts / older browsers
+      }
+    }
+    // Read languageModel.capabilities() → 'readily' | 'after-download' | 'no' | 'unknown'
+    async function readAiCapability(){
+      var g = window.ai || globalThis.ai || null;
+      try{
+        if(g && g.languageModel && typeof g.languageModel.capabilities === 'function'){
+          var cap = await g.languageModel.capabilities();
+          if(cap && typeof cap.available === 'string') return cap.available;
+        }
+      }catch(e){ /* API absent on this build */ }
+      return 'unknown';
+    }
+    // Kick the browser to fetch its model while we poll capabilities transparently.
+    async function runModelDownload(){
+      openAiSetupModal('downloading');
+      var g = window.ai || globalThis.ai || null;
+      var kick = null;
+      try{
+        if(g && g.languageModel && typeof g.languageModel.create === 'function'){
+          kick = g.languageModel.create({ systemPrompts: [SYSTEM_PROMPT] });
+        } else {
+          kick = createAISession();
+        }
+      }catch(e){ /* ignore; polling below still observes readiness */ }
+      var ticks = 0;
+      while(ticks < 80){
+        ticks++;
+        setDownloadProgress(Math.min(97, Math.round((ticks/80)*97)));
+        var st = await withTimeout(readAiCapability(), 1500, 'cap-poll').catch(function(){ return ''; });
+        if(st === 'readily'){
+          setDownloadProgress(100);
+          if(kick && typeof kick.then === 'function'){
+            kick.then(function(s){ if(s && typeof s.destroy === 'function'){ try{ s.destroy(); }catch(e){} } }, function(){});
+          }
+          closeAiSetupModal();
+          toast('Chrome AI model is ready.', 'info');
+          return true;
+        }
+        await new Promise(function(r){ setTimeout(r, 1100); });
+      }
+      setDownloadProgress(100);
+      closeAiSetupModal();
+      return true; // let the normal path retry; withTimeout guards long hangs
+    }
+    // Ensure the model is usable before generation; opens the modal when it is not.
+    async function ensureAiReady(){
+      var g = window.ai || globalThis.ai || null;
+      var factory = !!(g && (hasFn(g.languageModel,'create') || hasFn(g,'createTextSession') || hasFn(g,'createSession') || hasFn(g,'createLanguageModel') || hasFn(g.assistant,'create')));
+      if(!factory){
+        console.error('[MooduTools AI] No window.ai factory — showing setup modal.');
+        finishGenerate();
+        setStatus('info','Follow the setup steps to enable Gemini Nano, or tap a Live Demo.');
+        openAiSetupModal('guide');
+        return false;
+      }
+      var st = await withTimeout(readAiCapability(), 2000, 'cap-check').catch(function(){ return 'unknown'; });
+      if(st === 'readily') return true;
+      if(st === 'after-download') return await runModelDownload();
+      finishGenerate();
+      setStatus('info', st === 'no'
+        ? 'Gemini Nano is disabled on this browser. Enable it below, or tap a Live Demo.'
+        : 'We couldn\'t verify Gemini Nano. Follow the setup steps below.');
+      openAiSetupModal('guide');
+      return false;
+    }
+    // Called from the modal's "I've enabled it — Check again" button.
+    async function retryAiSetup(){
+      var ready = await ensureAiReady();
+      if(ready){
+        closeAiSetupModal();
+        var m = pendingMood; pendingMood = '';
+        if(m){ generate(m); }
+      }
+    }
+
     // [REQ 2] Styled toast/alert for errors & notices.
     function toast(msg, type){
       var el = document.getElementById('toast');
@@ -1047,5 +1194,50 @@
     </div>
     <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
   </footer>
+<div class="ai-modal" id="aiModal" hidden>
+    <div class="ai-modal-overlay"></div>
+    <div class="ai-modal-card" role="dialog" aria-modal="true" aria-labelledby="aiModalTitle">
+      <button class="ai-close" id="aiCloseBtn" aria-label="Close dialog">&#10005;</button>
+
+      <div class="ai-modal-head">
+        <span class="ai-modal-ico">&#9889;</span>
+        <span class="ai-modal-badge">Chrome Built-in AI</span>
+      </div>
+      <h3 id="aiModalTitle">Unlock Chrome's Built-in AI</h3>
+      <p class="ai-modal-privacy">&#128274; 100% On-Device &amp; Private. Your data never leaves this browser. No servers, no tracking.</p>
+
+      <div class="ai-steps" id="aiSteps">
+        <div class="ai-modal-sub">Enable Gemini Nano in about 2 minutes — you'll do it yourself, safely, right in Chrome:</div>
+        <ol class="ai-guide">
+          <li>
+            <span class="ai-step-txt"><code>chrome://flags/#prompt-api-for-gemini-nano</code> &rarr; set to <b>Enabled</b></span>
+            <button type="button" class="ai-copy" data-copy="chrome://flags/#prompt-api-for-gemini-nano">Copy Link</button>
+          </li>
+          <li>
+            <span class="ai-step-txt"><code>chrome://flags/#optimization-guide-on-device-model</code> &rarr; set to <b>Enabled BypassPrefRequirement</b></span>
+            <button type="button" class="ai-copy" data-copy="chrome://flags/#optimization-guide-on-device-model">Copy Link</button>
+          </li>
+          <li>
+            <span class="ai-step-txt"><code>chrome://components</code> &rarr; find <b>Optimization Guide On Device Model</b> &rarr; click <b>Check for update</b></span>
+            <button type="button" class="ai-copy" data-copy="chrome://components">Copy Link</button>
+          </li>
+        </ol>
+
+        <div class="ai-actions">
+          <button type="button" class="btn primary" id="aiRetryBtn">I've enabled it &mdash; Check again</button>
+          <button type="button" class="btn outline" id="aiDemoBtn">&#10024; Try Live Demo &mdash; no AI needed</button>
+        </div>
+      </div>
+
+      <div class="ai-dl" id="aiDl" hidden>
+        <div class="ai-dl-row">
+          <span class="state-spinner"></span>
+          <span>Downloading Chrome's official AI model...</span>
+        </div>
+        <div class="ai-progress"><div class="ai-progress-fill" id="aiProgBar" style="width:0%"></div></div>
+        <div class="ai-progress-note" id="aiProgNote">0% &mdash; first download may take a few minutes. Your privacy is preserved: nothing is uploaded.</div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
