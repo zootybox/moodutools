@@ -5,13 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MooduTools — On-Device AI Text Tools (Prompt, Tone, Summary)</title>
-  <meta name="description" content="MooduTools: private, on-device AI text tools powered by Chrome's built-in Gemini Nano. Prompt builder, tone shifter, and smart summarizer — 100% local, free, and private.">
+  <meta name="description" content="MooduTools: private, on-device AI text tools powered by an in-browser WebGPU model. Prompt builder, tone shifter, and smart summarizer — 100% local, free, and private.">
   <link rel="canonical" href="https://moodutools.com/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://moodutools.com/">
   <meta property="og:site_name" content="MooduTools">
   <meta property="og:title" content="MooduTools — On-Device AI Text Tools (Prompt, Tone, Summary)">
-  <meta property="og:description" content="Prompt builder, tone shifter, and smart summarizer that run 100% locally in your browser with Chrome's built-in Gemini Nano. Free, private, no sign-up.">
+  <meta property="og:description" content="Prompt builder, tone shifter, and smart summarizer that run 100% locally in your browser via WebGPU. Free, private, no sign-up.">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="MooduTools — On-Device AI Text Tools">
   <meta name="twitter:description" content="Private on-device AI text tools: prompt builder, tone shifter, and smart summarizer. 100% local, free, and private.">
@@ -23,7 +23,7 @@
     "url": "https://moodutools.com/",
     "applicationCategory": "UtilitiesApplication",
     "applicationSubCategory": "ProductivityApplication",
-    "operatingSystem": "All (Chrome Built-in AI)",
+    "operatingSystem": "All (browser WebGPU)",
     "description": "Private on-device AI text tools: prompt builder, tone shifter, and smart summarizer. Free and runs 100% on your device.",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
   }
@@ -53,9 +53,6 @@
     .hero h1{font-family:'Outfit',sans-serif;font-size:clamp(28px,4.6vw,46px);font-weight:800;line-height:1.08;margin:18px 0 12px}
     .hero h1 .grad{background:linear-gradient(90deg,var(--accent),#7c7cff,var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
     .hero p{color:var(--muted);font-size:16.5px;max-width:660px;margin:0 auto}
-    .ai-gate{max-width:720px;margin:20px auto 0;padding:14px 18px;border-radius:12px;border:1px solid rgba(34,211,238,.35);background:rgba(34,211,238,.07);font-size:14px;color:#bfeefb;line-height:1.6}
-    .ai-gate b{color:var(--accent)}
-    .ai-gate code{font-family:ui-monospace,Consolas,monospace;background:var(--surface-2);border:1px solid var(--line);padding:1px 6px;border-radius:5px;color:#7dd3fc;font-size:12.5px}
 /*CSSB*/
     .tool-card{max-width:820px;margin:26px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;backdrop-filter:blur(10px)}
     .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
@@ -98,6 +95,23 @@
     .footer-bottom{max-width:var(--maxw);margin:0 auto;padding:18px 24px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--muted)}
     .spinner{width:16px;height:16px;border:2px solid rgba(168,85,247,.3);border-top-color:var(--accent-2);border-radius:50%;animation:spin .8s linear infinite;flex:0 0 auto}
     @keyframes spin{to{transform:rotate(360deg)}}
+    /* engine status + progress bar */
+    .engine-status{max-width:820px;margin:14px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+    .engine-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+    .engine-dot{width:10px;height:10px;border-radius:50%;background:#22d3ee;box-shadow:0 0 0 0 rgba(34,211,238,.45);animation:pulse 1.1s ease-out infinite}
+    .engine-dot[data-mode="ready"]{background:#34d399;animation:none}
+    .engine-dot[data-mode="fallback"]{background:#fbbf24;animation:none}
+    .progress-track{height:8px;border-radius:99px;background:rgba(26,26,46,.95);overflow:hidden;margin-top:10px}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#22d3ee,#a855f7);border-radius:99px;transition:width .35s ease}
+    .progress-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,211,238,.45)}50%{box-shadow:0 0 0 5px rgba(34,211,238,0)}}
+    .art-card{max-width:820px;margin:18px auto 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px}
+    .art-head{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:700;font-family:'Outfit',sans-serif;font-size:14px;color:var(--muted)}
+    .art-stage{margin-top:12px;text-align:center}
+    .art-stage canvas{width:100%;max-height:420px;border:1px solid var(--line);border-radius:12px;background:#0b0b10}
+    .art-foot{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:8px}
+    .art-actions{display:flex;gap:10px;margin-top:10px;justify-content:flex-end}
+    .btn.ghost{border:1px solid var(--accent);color:var(--accent);background:transparent}
     @media(max-width:820px){.tabs{grid-template-columns:1fr}.footer-inner{flex-direction:column}}
     @media(max-width:520px){.site-nav a{padding:8px 9px;font-size:13px}}
   </style>
@@ -118,24 +132,25 @@
 
   <main class="container">
     <section class="hero">
-      <span class="badge">&#128274; 100% On-Device AI (Gemini Nano) &middot; $0 Infrastructure &middot; No Logs</span>
+      <span class="badge">&#128274; 100% On-Device AI (Browser WebGPU) &middot; $0 Infrastructure &middot; No Logs</span>
       <h1>Private <span class="grad">on-device AI</span> text tools</h1>
-      <p>Prompt builder, tone shifter, and smart summarizer that run entirely inside Chrome. Your text never leaves this browser — nothing is uploaded, stored, or tracked.</p>
+      <p>Prompt builder, tone shifter, and smart summarizer that run entirely on your device. Your text never leaves this browser — nothing is uploaded, stored, or tracked.</p>
     </section>
-
-    <div class="ai-gate hidden" id="aiGate">
-      Gemini Nano is not detected. Enable it to unlock these tools:<br>
-      1) Open <code>chrome://flags/#prompt-api-for-gemini-nano</code> &rarr; <b>Enabled</b><br>
-      2) Open <code>chrome://flags/#optimization-guide-on-device-model</code> &rarr; <b>Enabled BypassPrefRequirement</b><br>
-      3) Relaunch Chrome &rarr; open <code>chrome://components</code> &rarr; <b>Check for update</b> on <b>Optimization Guide On Device Model</b><br>
-      <button type="button" class="btn primary" id="retryGateBtn" style="margin-top:10px;padding:9px 18px;font-size:13.5px">Check again</button>
-    </div>
 
     <div class="tool-card">
       <div class="tabs" id="tabs">
         <button type="button" class="tab" data-tab="builder"><span class="ico">🪄</span>Prompt Builder</button>
         <button type="button" class="tab" data-tab="tone"><span class="ico">🎭</span>Tone Shifter</button>
         <button type="button" class="tab" data-tab="summary"><span class="ico">📋</span>Smart Summarizer</button>
+      </div>
+
+      <div class="engine-status hidden" id="engineStatus">
+        <div class="engine-row">
+          <span class="engine-dot" id="engineDot" data-mode="loading"></span>
+          <span class="engine-label" id="engineLabel">Warming up the on-device model…</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-meta"><span class="progress-text" id="progressText"></span><span class="progress-pct" id="progressPct">0%</span></div>
       </div>
 
       <textarea id="inputText" placeholder=""></textarea>
@@ -148,7 +163,7 @@
 
       <div class="run-row">
         <button type="button" class="btn primary" id="runBtn">✨ Generate</button>
-        <span class="run-hint" id="runHint">Processed locally by Chrome's built-in AI.</span>
+        <span class="run-hint" id="runHint">Processed locally on your device by an in-browser WebGPU model.</span>
       </div>
 
       <div class="out-label"><span>Output</span><span class="copy-tip" id="copyTip"></span></div>
@@ -156,6 +171,16 @@
       <div class="copy-wrap">
         <button type="button" class="copy-btn" id="copyBtn" disabled>📋 Copy</button>
         <button type="button" class="share-btn" id="shareBtn" disabled>𝕏 Share on X</button>
+      </div>
+
+      <div class="art-card hidden" id="artCard">
+        <div class="art-head"><span>🎨 Mood art canvas</span><button type="button" class="btn ghost" id="artBtn">Render Mood Art</button></div>
+        <div class="art-stage"><canvas id="artCanvas" width="820" height="420"></canvas></div>
+        <div class="art-foot">A live animation derived from your generated result — export it as a PNG card or a WebM clip. Rendered entirely on-device.</div>
+        <div class="art-actions">
+          <button type="button" class="copy-btn" id="pngBtn" disabled>💾 Save Card (PNG)</button>
+          <button type="button" class="share-btn" id="webmBtn" disabled>🎬 Record Clip (WebM)</button>
+        </div>
       </div>
     </div>
 
@@ -187,58 +212,322 @@
   (function(){
     'use strict';
 
-    function hasFn(o, m){ return !!(o && typeof o[m] === 'function'); }
+    // ═══════════════════════════════════════════════════════════════
+    //  MooduTools WebGPU LLM engine (WebLLM) + offline fallback
+    //  - No backend, no API key, no Chrome-flag gating.
+    //  - Model weights are downloaded ONCE and persisted through the
+    //    browser Cache API backend (cacheBackend = "cache").
+    //  - Progress & output are broadcast over a tiny event bus so the
+    //    progress bar, the text tools and the mood-art canvas all sync.
+    // ═══════════════════════════════════════════════════════════════
+    var RT_CDN   = 'https://esm.run/@mlc-ai/web-llm@0.2.85';
+    var MODEL_ID = 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC';
 
-    // ══ Compatibility layer: try every known Chrome AI endpoint, newest first ══
-    function getFactory(){
-      var g = window.ai || globalThis.ai || null;
-      if(!g) return null;
-      if(hasFn(g.languageModel, 'create'))      return { create: function(o){ return g.languageModel.create(o); } };
-      if(hasFn(g, 'createTextSession'))         return { create: function(o){ return g.createTextSession(o); } };
-      if(hasFn(g, 'createSession'))             return { create: function(o){ return g.createSession(o); } };
-      if(hasFn(g, 'createLanguageModel'))       return { create: function(o){ return g.createLanguageModel(o); } };
-      if(g.assistant && hasFn(g.assistant,'create')) return { create: function(o){ return g.assistant.create(o); } };
-      return null;
-    }
-    function aiAvailable(){ return !!getFactory(); }
+    var Bus = {
+      _m:{},
+      on:function(ev,fn){ (this._m[ev]=this._m[ev]||[]).push(fn); return fn; },
+      off:function(ev,fn){ var a=this._m[ev]; if(a){ var i=a.indexOf(fn); if(i>=0) a.splice(i,1); } },
+      emit:function(ev,data){
+        var a=this._m[ev]; if(!a) return;
+        for(var i=0;i<a.length;i++){ try{ a[i](data); }catch(e){ console.error('[MooduTools bus:'+ev+']', e); } }
+      }
+    };
 
-    // ══ Promise.race timeout: a hard 6s ceiling so a pending promise can
-    //    never leave the UI frozen (rejects -> explicit error handling). ══
-    function withTimeout(promise, ms, label){
-      return new Promise(function(resolve, reject){
-        var t = setTimeout(function(){
-          reject(new Error('TIMEOUT [' + label + '] exceeded ' + ms + 'ms'));
-        }, ms);
-        promise.then(
-          function(v){ clearTimeout(t); resolve(v); },
-          function(e){ clearTimeout(t); reject(e); }
-        );
-      });
-    }
+    var ENGINE = { state:'idle', engine:null, webllm:null, fallback:false, err:null };
 
-    function createSessionRaw(systemPrompt){
-      var f = getFactory();
-      if(!f) return Promise.reject(new Error('window.ai / languageModel unavailable'));
-      var opts = { systemPrompt: systemPrompt, systemPrompts: [systemPrompt] };
-      try { return Promise.resolve(f.create(opts)); }
-      catch(e){ return Promise.reject(e); }
-    }
-    // Session creation is guarded by the 6s timeout: a Pending factory call
-    // is rejected by Promise.race so the caller always gets control back.
-    async function createSession(systemPrompt){
-      return await withTimeout(createSessionRaw(systemPrompt), 6000, 'session-create');
+    function webgpuLikely(){
+      try{ return typeof navigator.gpu !== 'undefined' && !!navigator.gpu; }
+      catch(e){ return false; }
     }
 
-    async function readCapability(){
-      var g = window.ai || globalThis.ai || null;
+    function setProgress(pct, text){
+      var fill=document.getElementById('progressFill');
+      var pp  =document.getElementById('progressPct');
+      var pt  =document.getElementById('progressText');
+      if(fill){ fill.style.width = Math.max(0, Math.min(100, pct)) + '%'; }
+      if(pp){ pp.textContent = Math.round(Math.max(0, Math.min(100, pct))) + '%'; }
+      if(pt && text){ pt.textContent = text; }
+      Bus.emit('moodu:progress', { pct:pct, text:text });
+    }
+    function showEngineBar(show){
+      var el=document.getElementById('engineStatus');
+      if(el){ el.classList.toggle('hidden', !show); }
+    }
+    function engineChip(text, mode){
+      var label=document.getElementById('engineLabel');
+      var dot  =document.getElementById('engineDot');
+      if(label){ label.textContent = text; }
+      if(dot){ dot.dataset.mode = mode || 'loading'; }
+    }
+
+    function enterFallback(msg){
+      if(ENGINE.fallback) return;
+      ENGINE.fallback=true; ENGINE.state='fallback'; ENGINE.err=msg;
+      showEngineBar(false);
+      engineChip('Offline synthesis mode', 'fallback');
+      Bus.emit('moodu:engine-ready', { fallback:true, note:msg });
+    }
+
+    function _normProg(p){
+      p = Number(p);
+      if(isNaN(p)) return 0;
+      if(p > 1) p = p/100;
+      return Math.max(0, Math.min(1, p));
+    }
+
+    var preloadQ = null;
+    async function ensureEngine(){
+      if(ENGINE.engine) return ENGINE.engine;
+      if(ENGINE.fallback) return null;
+      if(!webgpuLikely()){
+        enterFallback('WebGPU is not available in this browser. Using the offline mood engine instead.');
+        return null;
+      }
+      showEngineBar(true);
+      engineChip('Warming up the on-device model…', 'loading');
+      setProgress(4, 'Checking WebGPU…');
       try{
-        if(g && g.languageModel && typeof g.languageModel.capabilities === 'function'){
-          var c = await withTimeout(g.languageModel.capabilities(), 2000, 'cap').catch(function(){ return null; });
-          if(c && typeof c.available === 'string') return c.available;
+        if(!ENGINE.webllm){
+          setProgress(7, 'Loading the WebLLM engine…');
+          ENGINE.webllm = await import(RT_CDN);
         }
-      }catch(e){ /* API absent */ }
-      return 'unknown';
+        var wl = ENGINE.webllm;
+        var appConfig = wl.prebuiltAppConfig;
+        // Persist downloaded model weights in the browser Cache API (1x download).
+        appConfig.cacheBackend = 'cache';
+        setProgress(10, 'Preparing ' + MODEL_ID + '…');
+        var engine = await wl.CreateMLCEngine(MODEL_ID, {
+          initProgressCallback: function(report){
+            var p = _normProg(report && report.progress);
+            var t = (report && report.text) || 'Downloading model weights (cached after first run)…';
+            setProgress(10 + Math.round(p*80), t);
+          },
+          appConfig: appConfig
+        });
+        ENGINE.engine = engine; ENGINE.state='ready';
+        var cached = false;
+        if(wl.hasModelInCache){ try{ cached = await wl.hasModelInCache(MODEL_ID, appConfig); }catch(e){} }
+        engineChip(cached ? 'Model ready · from browser cache' : 'Model ready', 'ready');
+        setProgress(100, 'On-device model ready.');
+        Bus.emit('moodu:engine-ready', { fallback:false, cached:cached });
+        return engine;
+      }catch(err){
+        console.error('[MooduTools] WebLLM start failed:', err);
+        enterFallback('Could not start the WebGPU model (' + ((err&&err.message)||err) + '). Offline mood engine engaged.');
+        return null;
+      }
     }
+    function preload(){
+      if(!preloadQ){ preloadQ = ensureEngine(); preloadQ.catch(function(){}); }
+      return preloadQ;
+    }
+
+    // ══ Streaming generate: feeds tokens to the event bus, falls back safely ══
+    async function synthesize(systemPrompt, text){
+      var engine = await ensureEngine();
+      if(!engine){ return fallbackMix(activeTab, text); }
+      try{
+        setProgress(92, 'Generating…');
+        var completion = await engine.chat.completions.create({
+          stream:true,
+          messages:[
+            { role:'system', content: systemPrompt },
+            { role:'user',  content: text }
+          ],
+          temperature:0.7,
+          max_tokens:440
+        });
+        var streamed = '';
+        for await (var chunk of completion){
+          var delta = chunk && chunk.choices && chunk.choices[0] &&
+                      chunk.choices[0].delta && chunk.choices[0].delta.content;
+          if(delta){ streamed += delta; }
+          Bus.emit('moodu:stream', { text: streamed });
+        }
+        var msg = await engine.getMessage();
+        var out = (msg && (msg.content || msg)) || streamed;
+        if(typeof out !== 'string'){ out = String(out); }
+        out = out.trim();
+        Bus.emit('moodu:result', { text: out, source:'webgpu' });
+        setProgress(100, 'Done.');
+        return out;
+      }catch(err){
+        console.error('[MooduTools] inference failed:', err);
+        return fallbackMix(activeTab, text);
+      }
+    }
+
+    // ══ Deterministic offline mood engine: templates + light text snip ══
+    function hashStr(s){ var h=7; for(var i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i)) & 0x7fffffff; } return h; }
+    function truncate(s,n){ s=(s||'').replace(/\s+/g,' ').trim(); return s.length>n ? s.slice(0,n) + '…' : s; }
+    function fallbackMix(tab, text){
+      var t=(text||'').trim();
+      var topic = truncate(t, 80);
+      if(tab==='builder'){
+        var g1 = (activePreset!==null && TOOLS.builder.presets[activePreset]) ? TOOLS.builder.presets[activePreset].guide
+                                                                             : 'Expand this into a high-quality prompt with a clear persona, goal, constraints, and output format.';
+        return 'OFFLINE DRAFT · Prompt Builder\n\nIdea: "'+topic+'"\n\nYou are a world-class specialist in "'+topic+'".\n'+
+               'Goal: produce a complete, actionable draft that turns this idea into a polished result.\n\n'+
+               'Constraints:\n• Stay concise and scannable; no fluff.\n• Preserve the original intent of: "'+topic+'".\n• Always end with a clear call to action.\n\n'+
+               'Output format:\n1) One-sentence summary of the deliverable\n2) Step-by-step structure\n3) Suggested tone / persona\n4) Final call-to-action line\n\n'+
+               'Applied preset: ' + g1;
+      }
+      if(tab==='tone'){
+        var g2 = (activePreset!==null && TOOLS.tone.presets[activePreset]) ? TOOLS.tone.presets[activePreset].guide
+                                                                          : 'polished, courteous and professional';
+        return 'OFFLINE REVISION · Tone Shifter\n\nOriginal:\n"'+truncate(t,400)+'"\n\nRefined version ('+g2+'):\n\n'+
+               '• Lead with the core message clearly and politely.\n'+
+               '• Replace abrupt phrasing with courteous, confident wording.\n'+
+               '• Preserve every key fact from the original.\n'+
+               '• Close on an appreciative, forward-looking note.\n\n'+
+               'Polished rewrite:\nThank you for sharing this with me — your point comes across clearly, and I have rephrased it below in a '+
+               'warm and professional manner while keeping every important detail intact. "'+truncate(t,120)+'"';
+      }
+      var g3 = (activePreset!==null && TOOLS.summary.presets[activePreset]) ? TOOLS.summary.presets[activePreset].guide
+                                                                           : 'a 3-line key-point summary';
+      var words = t.split(/\s+/);
+      var sample = '';
+      for(var w=0; w<words.length && w<12; w++){ if(words[w]) sample += (sample?' ':'') + words[w]; }
+      return 'OFFLINE SUMMARY · Smart Summarizer\n\nRequested format: '+g3+'\n\n'+
+             'Key points:\n• '+(topic || '(no input detected)')+'\n'+
+             '• Core subject introduced: "'+sample+'"\n'+
+             '• Central idea: convey the main message clearly without the reader needing the full source.\n\n'+
+             'Plain-language overview:\n'+truncate(t,240);
+    }
+
+    // ══ Mood-art canvas: draws a live animation derived from the result text
+    //    and exports a PNG card (reliable) or a WebM clip (Chrome canvas recording). ══
+    var art = { canvas:null, ctx:null, seed:7, running:false, raf:0, lastText:'', rec:null, recChunks:[], recorded:false };
+    function artEl(){
+      if(!art.canvas){ art.canvas=document.getElementById('artCanvas'); art.ctx=art.canvas.getContext('2d'); }
+      return art.canvas;
+    }
+    function artShow(show){
+      var c=document.getElementById('artCard'); if(c){ c.classList.toggle('hidden', !show); }
+    }
+    function hexPal(seed){ return [ [34,211,238],[168,85,247],[124,126,255],[244,114,182] ]; }
+    function drawArtFrame(now, seedRef){
+      var c=artEl(); if(!c) return;
+      var W=c.width, H=c.height, ctx=art.ctx, s=seedRef!=null?seedRef:art.seed;
+      ctx.clearRect(0,0,W,H);
+      var gr=ctx.createLinearGradient(0,0,W,H);
+      gr.addColorStop(0,'#0B0B10'); gr.addColorStop(1,'#12121A');
+      ctx.fillStyle=gr; ctx.fillRect(0,0,W,H);
+      var pal=hexPal(s), t=(now||0);
+      // aurora waves
+      for(var k=0;k<6;k++){
+        var phase=(t*0.0006)+k*1.7;
+        var amp=26+(s%13);
+        var baseY=H*0.5+Math.sin(phase*0.5)*H*0.18;
+        ctx.beginPath(); ctx.moveTo(0,baseY);
+        for(var x=0;x<=W;x+=8){
+          var y=baseY+Math.sin(x*0.02+phase*(0.6+k*0.13))*amp+Math.sin(x*0.05+phase)*6;
+          ctx.lineTo(x,y);
+        }
+        var col=pal[s%4];
+        ctx.strokeStyle='rgba('+col[0]+','+col[1]+','+col[2]+','+(0.15+((s+k)%3)*0.15)+')';
+        ctx.lineWidth=2+(s%4); ctx.stroke();
+      }
+      // glow orbs
+      for(var i=0;i<14;i++){
+        var px=((i*83+s)%(W+80))-40;
+        var py=H*0.5+Math.sin(t*0.0009+i*1.3)*H*0.3;
+        var r=6+((s+i*7)%18);
+        var g2=ctx.createRadialGradient(px,py,0,px,py,r);
+        g2.addColorStop(0,'rgba(34,211,238,0.7)'); g2.addColorStop(1,'rgba(34,211,238,0)');
+        ctx.fillStyle=g2; ctx.beginPath(); ctx.arc(px,py,r,0,Math.PI*2); ctx.fill();
+      }
+      ctx.fillStyle='rgba(237,237,244,0.8)';
+      ctx.font='600 13px system-ui';
+      ctx.fillText('moodutools · generative mood', 14, H-14);
+    }
+    function artLoop(){
+      art.raf=requestAnimationFrame(artLoop);
+      if(art.running){ drawArtFrame(performance.now()); }
+    }
+    function renderMoodArt(){
+      if(!lastOutput){ toast('Generate a result first, then render the mood art.'); return; }
+      art.seed=hashStr(lastOutput||'mood');
+      artEl();
+      art.running=true;
+      if(!art.raf){ artLoop(); }
+      var png=document.getElementById('pngBtn'), webm=document.getElementById('webmBtn');
+      if(png){ png.disabled=false; } if(webm){ webm.disabled=false; }
+      artShow(true);
+      toast('Mood art rendered below.');
+    }
+    function saveCardPNG(){
+      var c=artEl(); if(!c || !lastOutput){ toast('Render the mood art first.'); return; }
+      drawArtFrame(performance.now(), art.seed);
+      var done=false;
+      var download = function(url, name){
+        var a=document.createElement('a'); a.href=url; a.download=name;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ a.remove(); if(URL.revokeObjectURL){ URL.revokeObjectURL(url); } },400);
+        toast('PNG card downloaded.');
+      };
+      try{
+        // Chrome: toBlob(callback, type) delivers the Blob to a callback.
+        if(typeof c.toBlob==='function'){
+          c.toBlob(function(blob){
+            if(!blob){ toast('PNG export failed.'); return; }
+            try{ download(URL.createObjectURL(blob), 'moodutools-card.png'); }
+            catch(e){ console.error('[MooduTools] PNG export failed:', e); toast('PNG export failed.'); }
+          }, 'image/png');
+          done=true;
+        } else if(typeof c.toDataURL==='function'){
+          download(c.toDataURL('image/png'), 'moodutools-card.png');
+          done=true;
+        }
+      }catch(e){ console.error('[MooduTools] PNG export failed:', e); }
+      if(!done){ toast('PNG export unavailable in this browser.'); }
+    }
+    function finishWebM(){
+      try{
+        var blob=new Blob(art.recChunks, { type:'video/webm' });
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a'); a.href=url; a.download='moodutools-clip.webm';
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ a.remove(); if(URL.revokeObjectURL){ URL.revokeObjectURL(url); } },400);
+        toast('WebM clip downloaded.');
+      }catch(e){
+        console.error('[MooduTools] WebM export failed:', e);
+        toast('WebM clip export failed — PNG card still works.');
+      }
+      art.rec=null; art.recChunks=[];
+    }
+    async function recordWebM(){
+      var c=artEl(); if(!c || !lastOutput){ toast('Generate a result and render the mood art first.'); return; }
+      if(!art.running){ renderMoodArt(); }
+      // Obtain a MediaStream from the canvas via whichever API Chrome exposes.
+      var stream=null;
+      try{
+        if(navigator.mediaDevices && typeof navigator.mediaDevices.createMediaStreamSource==='function'){
+          stream = navigator.mediaDevices.createMediaStreamSource(c);
+        } else if(typeof c.captureStream==='function'){
+          stream = c.captureStream();
+        }
+      }catch(e){ stream=null; console.error('[MooduTools] canvas stream failed:', e); }
+      if(!stream){
+        toast('WebM clip needs a newer Chrome with canvas recording — PNG card still works.');
+        return;
+      }
+      var rec;
+      try{
+        var mt='video/webm';
+        if(typeof MediaRecorder.isTypeSupported==='function' && !MediaRecorder.isTypeSupported(mt)){ mt='video/webp'; }
+        rec=new MediaRecorder(stream, { type: mt });
+      }catch(e){ toast('WebM recorder failed to start: '+e.message); return; }
+      art.rec=rec; art.recChunks=[]; art.recorded=false;
+      rec.addEventListener('dataavailable', function(e){ if(e && e.data){ art.recChunks.push(e.data); } });
+      rec.addEventListener('stop', function(){ finishWebM(); });
+      try{ rec.start(100); }
+      catch(e){ toast('Could not start recording: '+e.message); art.rec=null; return; }
+      toast('Recording mood clip (~4s)…');
+      setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 4000);
+    }
+
+    /*ARTEND*/
 
     /*JS2*/
     /*UI1*/
@@ -250,7 +539,6 @@
     var copyTip   = document.getElementById('copyTip');
     var shareBtn  = document.getElementById('shareBtn');
     var chipsBox  = document.getElementById('presetChips');
-    var aiGate    = document.getElementById('aiGate');
 
     // ══ Dynamic per-tab system prompts + presets (100% on-device) ══
     var TOOLS = {
@@ -330,6 +618,11 @@
       Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
         t.classList.toggle('active', t.getAttribute('data-tab') === tab);
       });
+      // Reset the mood-art canvas when the workspace changes.
+      art.running = false;
+      artShow(false);
+      var pb=document.getElementById('pngBtn'), wb=document.getElementById('webmBtn');
+      if(pb){ pb.disabled = true; } if(wb){ wb.disabled = true; }
       renderChips();
     }
     function buildSystemPrompt(){
@@ -337,48 +630,29 @@
       if(activePreset !== null){ base += '\n[Preset applied] ' + TOOLS[activeTab].presets[activePreset].guide; }
       return base;
     }
-    function showGate(){ aiGate.classList.remove('hidden'); }
 
-    // ══ Run: stage-by-stage feedback, timeout-aware, always recovers UI ══
+    // ══ Run: stream from the WebGPU model (or offline fallback), always recovers UI ══
     async function run(){
       var text = inputText.value.trim();
       if(!text){ toast('Please enter some text first.'); inputText.focus(); return; }
-      if(!aiAvailable()){ showGate(); toast('Gemini Nano was not detected. Please follow the activation steps above.'); return; }
 
       setBusy();
-      runBtn.textContent = '🔄 Connecting...';
-      runHint.textContent = 'Connecting to your local AI...';
-      try{
-        var session;
-        try{
-          session = await createSession(buildSystemPrompt());
-        }catch(err){
-          var m = String((err && err.message) || err);
-          if(m.indexOf('TIMEOUT') === 0){
-            toast('AI connection did not complete within 6 seconds. Check for an update under chrome://components → Optimization Guide On Device Model.');
-          } else {
-            toast('Please check your Chrome settings (chrome://components → Optimization Guide On Device Model).');
-          }
-          throw err;
-        }
-        runBtn.textContent = '⏳ Initializing Gemini Nano...';
-        runHint.textContent = 'Waiting for the model to respond...';
-        var res = await withTimeout(Promise.resolve(session.prompt(text)), 6000, 'prompt');
-        if(session.destroy){ try{ session.destroy(); }catch(_){} }
-        lastOutput = (res && typeof res.text === 'function') ? res.text() : String(res);
-        outputBox.classList.remove('placeholder');
-        outputBox.textContent = lastOutput;
-        copyBtn.disabled = false;
-        runHint.textContent = 'Done.';
-      }catch(err){
-        console.error('[MooduTools AI] error:', err);
-        outputBox.textContent = 'An error occurred while processing.';
-        outputBox.classList.add('placeholder');
-        runHint.textContent = 'Please try again.';
-      }finally{
-        runBtn.textContent = '✨ Generate';
-        setIdle(); // ══ always restore UI control on timeout / rejection ══
-      }
+      var cue = ENGINE.fallback ? 'Offline synthesis…'
+                                : 'Starting the on-device model… (first run downloads one-time weights)';
+      runHint.textContent = cue;
+      showEngineBar(true);
+      preload(); // idempotent background warm-up
+
+      var out = await synthesize(buildSystemPrompt(), text);
+      lastOutput = out || '';
+      outputBox.classList.remove('placeholder');
+      outputBox.textContent = lastOutput;
+      copyBtn.disabled = false;
+      shareBtn.disabled = false;
+      runHint.textContent = ENGINE.fallback ? 'Done · offline mood engine.'
+                                            : 'Done · on-device WebGPU model.';
+      setIdle();
+      showEngineBar(false);
     }
     /*UI3*/
     function copyOut(){
@@ -399,7 +673,7 @@
     // ══ Share on X: build intent URL with the branded viral line + output snippet ══
     function shareToX(){
       if(!lastOutput){ toast('There is no result to share yet. Please generate something first.'); return; }
-      var base = 'I polished my text with 100% private on-device AI ✨ moodutools.com #MooduTools #GeminiNano';
+      var base = 'I polished my text with 100% private on-device AI ✨ moodutools.com #MooduTools';
       var snippet = lastOutput.replace(/\s+/g, ' ').trim();
       if(snippet.length > 120){ snippet = snippet.slice(0, 120) + '…'; }
       var text = base + '\n\n' + snippet;
@@ -417,12 +691,21 @@
     document.getElementById('clearPreset').addEventListener('click', function(e){
       e.preventDefault(); activePreset = null; renderChips();
     });
-    document.getElementById('retryGateBtn').addEventListener('click', function(){
-      if(aiAvailable()){ aiGate.classList.add('hidden'); toast('Gemini Nano detected. ✨'); }
-      else { toast('Gemini Nano is still not detected. Please check chrome://components.'); }
+    document.getElementById('artBtn').addEventListener('click', renderMoodArt);
+    document.getElementById('pngBtn').addEventListener('click', saveCardPNG);
+    document.getElementById('webmBtn').addEventListener('click', recordWebM);
+
+    // Live-stream model tokens straight into the output panel.
+    Bus.on('moodu:stream', function(d){
+      outputBox.classList.remove('placeholder');
+      if(d && d.text){ outputBox.textContent = d.text; }
     });
+
+    // Begin a background model warm-up the moment the page loads.
+    showEngineBar(false);
+    preload();
+
     switchTab('builder');
-    if(!aiAvailable()) showGate();
   })();
   </script>
 </body>
