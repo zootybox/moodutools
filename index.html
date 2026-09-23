@@ -121,27 +121,27 @@
     <div class="header-inner container">
       <a href="/" class="site-logo">Moodu<span>Tools</span></a>
       <nav class="site-nav">
-        <a href="/" class="active">Home</a>
-        <a href="/docs/index.html">Docs</a>
-        <a href="/blog/">Blog</a>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
+        <a href="/" class="active" data-i18n="nav.home">Home</a>
+        <a href="/docs/index.html" data-i18n="nav.docs">Docs</a>
+        <a href="/blog/" data-i18n="nav.blog">Blog</a>
+        <a href="/about.html" data-i18n="nav.about">About</a>
+        <a href="/contact.html" data-i18n="nav.contact">Contact</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
     <section class="hero">
-      <span class="badge">&#128274; 100% On-Device AI (Browser WebGPU) &middot; $0 Infrastructure &middot; No Logs</span>
-      <h1>Private <span class="grad">on-device AI</span> text tools</h1>
-      <p>Prompt builder, tone shifter, and smart summarizer that run entirely on your device. Your text never leaves this browser — nothing is uploaded, stored, or tracked.</p>
+      <span class="badge" data-i18n="hero.badge">🔒 100% On-Device AI (Browser WebGPU) · $0 Infrastructure · No Logs</span>
+      <h1><span data-i18n="hero.titlea">Private </span><span class="grad" data-i18n="hero.titleb">on-device AI</span><span data-i18n="hero.titlec"> text tools</span></h1>
+      <p data-i18n="hero.sub">Prompt builder, tone shifter, and smart summarizer that run entirely on your device. Your text never leaves this browser — nothing is uploaded, stored, or tracked.</p>
     </section>
 
     <div class="tool-card">
       <div class="tabs" id="tabs">
-        <button type="button" class="tab" data-tab="builder"><span class="ico">🪄</span>Prompt Builder</button>
-        <button type="button" class="tab" data-tab="tone"><span class="ico">🎭</span>Tone Shifter</button>
-        <button type="button" class="tab" data-tab="summary"><span class="ico">📋</span>Smart Summarizer</button>
+        <button type="button" class="tab" data-tab="builder" data-i18n="tabs.builder"><span class="ico">🪄</span>Prompt Builder</button>
+        <button type="button" class="tab" data-tab="tone" data-i18n="tabs.tone"><span class="ico">🎭</span>Tone Shifter</button>
+        <button type="button" class="tab" data-tab="summary" data-i18n="tabs.summary"><span class="ico">📋</span>Smart Summarizer</button>
       </div>
 
       <div class="engine-status hidden" id="engineStatus">
@@ -156,58 +156,59 @@
       <textarea id="inputText" placeholder=""></textarea>
 
       <div class="presets-label">
-        <span>Quick select (optional)</span>
-        <a href="#" id="clearPreset" style="font-size:12px;color:var(--accent)">Clear</a>
+        <span data-i18n="common.quickSelect">Quick select (optional)</span>
+        <a href="#" id="clearPreset" data-i18n="common.clear" style="font-size:12px;color:var(--accent)">Clear</a>
       </div>
       <div class="preset-chips" id="presetChips"></div>
 
       <div class="run-row">
-        <button type="button" class="btn primary" id="runBtn">✨ Generate</button>
+        <button type="button" class="btn primary" id="runBtn" data-i18n="common.generate">✨ Generate</button>
         <span class="run-hint" id="runHint">Processed locally on your device by an in-browser WebGPU model.</span>
       </div>
 
-      <div class="out-label"><span>Output</span><span class="copy-tip" id="copyTip"></span></div>
+      <div class="out-label"><span data-i18n="common.output">Output</span><span class="copy-tip" id="copyTip"></span></div>
       <div class="output-box placeholder" id="outputBox">Your result will appear here.</div>
       <div class="copy-wrap">
-        <button type="button" class="copy-btn" id="copyBtn" disabled>📋 Copy</button>
-        <button type="button" class="share-btn" id="shareBtn" disabled>𝕏 Share on X</button>
+        <button type="button" class="copy-btn" id="copyBtn" disabled data-i18n="common.copy">📋 Copy</button>
+        <button type="button" class="share-btn" id="shareBtn" disabled data-i18n="common.share">𝕏 Share on X</button>
       </div>
 
       <div class="art-card hidden" id="artCard">
-        <div class="art-head"><span>🎨 Mood art canvas</span><button type="button" class="btn ghost" id="artBtn">Render Mood Art</button></div>
+        <div class="art-head"><span data-i18n="art.title">🎨 Mood art canvas</span><button type="button" class="btn ghost" id="artBtn" data-i18n="art.render">Render Mood Art</button></div>
         <div class="art-stage"><canvas id="artCanvas" width="820" height="420"></canvas></div>
-        <div class="art-foot">A live animation derived from your generated result — export it as a PNG card or a WebM clip. Rendered entirely on-device.</div>
+        <div class="art-foot" data-i18n="art.foot">A live animation derived from your generated result — export it as a PNG card or a WebM clip. Rendered entirely on-device.</div>
         <div class="art-actions">
-          <button type="button" class="copy-btn" id="pngBtn" disabled>💾 Save Card (PNG)</button>
-          <button type="button" class="share-btn" id="webmBtn" disabled>🎬 Record Clip (WebM)</button>
+          <button type="button" class="copy-btn" id="pngBtn" disabled data-i18n="art.png">💾 Save Card (PNG)</button>
+          <button type="button" class="share-btn" id="webmBtn" disabled data-i18n="art.webm">🎬 Record Clip (WebM)</button>
         </div>
       </div>
     </div>
 
-    <p class="privacy-foot">🔒 100% On-Device &amp; Private. Your text is processed only inside your browser and is never stored anywhere.</p>
+    <p class="privacy-foot" data-i18n="common.privacyFoot">🔒 100% On-Device &amp; Private. Your text is processed only inside your browser and is never stored anywhere.</p>
   </main>
 
   <footer class="site-footer">
     <div class="footer-inner container">
       <div>
         <div class="footer-brand">Moodu<span>Tools</span></div>
-        <p class="footer-desc">Free on-device AI text tools. Runs 100% on your device &mdash; private, no app, no sign-up, forever free.</p>
+        <p class="footer-desc" data-i18n="footer.desc">Free on-device AI text tools. Runs 100% on your device &mdash; private, no app, no sign-up, forever free.</p>
       </div>
       <div class="footer-links">
-        <h4>Resources</h4>
-        <a href="/docs/index.html">Docs</a>
-        <a href="/blog/">Blog</a>
+        <h4 data-i18n="footer.resources">Resources</h4>
+        <a href="/docs/index.html" data-i18n="nav.docs">Docs</a>
+        <a href="/blog/" data-i18n="nav.blog">Blog</a>
       </div>
       <div class="footer-links">
-        <h4>Company</h4>
-        <a href="/about.html">About</a>
-        <a href="/contact.html">Contact</a>
-        <a href="/privacy.html">Privacy Policy</a>
-        <a href="/terms.html">Terms of Service</a>
+        <h4 data-i18n="footer.company">Company</h4>
+        <a href="/about.html" data-i18n="nav.about">About</a>
+        <a href="/contact.html" data-i18n="nav.contact">Contact</a>
+        <a href="/privacy.html" data-i18n="nav.privacy">Privacy Policy</a>
+        <a href="/terms.html" data-i18n="nav.terms">Terms of Service</a>
       </div>
     </div>
-    <div class="footer-bottom">&copy; 2026 MooduTools. All rights reserved.</div>
+    <div class="footer-bottom" data-i18n="footer.copyright">&copy; 2026 MooduTools. All rights reserved.</div>
   </footer>
+<script src="/js/i18n.js"></script>
 <script>
   (function(){
     'use strict';
@@ -264,8 +265,8 @@
       if(ENGINE.fallback) return;
       ENGINE.fallback=true; ENGINE.state='fallback'; ENGINE.err=msg;
       showEngineBar(false);
-      engineChip('Offline synthesis mode', 'fallback');
-      Bus.emit('moodu:engine-ready', { fallback:true, note:msg });
+      engineChip(t('engine.offline'), 'fallback');
+      Bus.emit('moodu:engine-ready', { fallback:true, note:msg, lang:currentLang() });
     }
 
     function _normProg(p){
@@ -284,32 +285,32 @@
         return null;
       }
       showEngineBar(true);
-      engineChip('Warming up the on-device model…', 'loading');
-      setProgress(4, 'Checking WebGPU…');
+      engineChip(t('engine.warming'), 'loading');
+      setProgress(4, t('engine.checking'));
       try{
         if(!ENGINE.webllm){
-          setProgress(7, 'Loading the WebLLM engine…');
+          setProgress(7, t('engine.loading'));
           ENGINE.webllm = await import(RT_CDN);
         }
         var wl = ENGINE.webllm;
         var appConfig = wl.prebuiltAppConfig;
         // Persist downloaded model weights in the browser Cache API (1x download).
         appConfig.cacheBackend = 'cache';
-        setProgress(10, 'Preparing ' + MODEL_ID + '…');
+        setProgress(10, t('engine.preparing'));
         var engine = await wl.CreateMLCEngine(MODEL_ID, {
           initProgressCallback: function(report){
             var p = _normProg(report && report.progress);
-            var t = (report && report.text) || 'Downloading model weights (cached after first run)…';
-            setProgress(10 + Math.round(p*80), t);
+            var rtext = (report && report.text) || t('engine.downloading');
+            setProgress(10 + Math.round(p*80), rtext);
           },
           appConfig: appConfig
         });
         ENGINE.engine = engine; ENGINE.state='ready';
         var cached = false;
         if(wl.hasModelInCache){ try{ cached = await wl.hasModelInCache(MODEL_ID, appConfig); }catch(e){} }
-        engineChip(cached ? 'Model ready · from browser cache' : 'Model ready', 'ready');
-        setProgress(100, 'On-device model ready.');
-        Bus.emit('moodu:engine-ready', { fallback:false, cached:cached });
+        engineChip(cached ? t('engine.readyCached') : t('engine.ready'), 'ready');
+        setProgress(100, t('engine.ready'));
+        Bus.emit('moodu:engine-ready', { fallback:false, cached:cached, lang:currentLang() });
         return engine;
       }catch(err){
         console.error('[MooduTools] WebLLM start failed:', err);
@@ -327,7 +328,7 @@
       var engine = await ensureEngine();
       if(!engine){ return fallbackMix(activeTab, text); }
       try{
-        setProgress(92, 'Generating…');
+        setProgress(92, t('engine.checking'));
         var completion = await engine.chat.completions.create({
           stream:true,
           messages:[
@@ -335,7 +336,8 @@
             { role:'user',  content: text }
           ],
           temperature:0.7,
-          max_tokens:440
+          max_tokens:440,
+          lang: currentLang()   // pass the active locale into the generation pipeline
         });
         var streamed = '';
         for await (var chunk of completion){
@@ -348,8 +350,8 @@
         var out = (msg && (msg.content || msg)) || streamed;
         if(typeof out !== 'string'){ out = String(out); }
         out = out.trim();
-        Bus.emit('moodu:result', { text: out, source:'webgpu' });
-        setProgress(100, 'Done.');
+        Bus.emit('moodu:result', { text: out, source:'webgpu', lang:currentLang() });
+        setProgress(100, t('engine.ready'));
         return out;
       }catch(err){
         console.error('[MooduTools] inference failed:', err);
@@ -357,42 +359,27 @@
       }
     }
 
-    // ══ Deterministic offline mood engine: templates + light text snip ══
+    // ══ Deterministic offline mood engine: localized templates + text snip ══
     function hashStr(s){ var h=7; for(var i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i)) & 0x7fffffff; } return h; }
     function truncate(s,n){ s=(s||'').replace(/\s+/g,' ').trim(); return s.length>n ? s.slice(0,n) + '…' : s; }
     function fallbackMix(tab, text){
-      var t=(text||'').trim();
-      var topic = truncate(t, 80);
-      if(tab==='builder'){
-        var g1 = (activePreset!==null && TOOLS.builder.presets[activePreset]) ? TOOLS.builder.presets[activePreset].guide
-                                                                             : 'Expand this into a high-quality prompt with a clear persona, goal, constraints, and output format.';
-        return 'OFFLINE DRAFT · Prompt Builder\n\nIdea: "'+topic+'"\n\nYou are a world-class specialist in "'+topic+'".\n'+
-               'Goal: produce a complete, actionable draft that turns this idea into a polished result.\n\n'+
-               'Constraints:\n• Stay concise and scannable; no fluff.\n• Preserve the original intent of: "'+topic+'".\n• Always end with a clear call to action.\n\n'+
-               'Output format:\n1) One-sentence summary of the deliverable\n2) Step-by-step structure\n3) Suggested tone / persona\n4) Final call-to-action line\n\n'+
-               'Applied preset: ' + g1;
-      }
-      if(tab==='tone'){
-        var g2 = (activePreset!==null && TOOLS.tone.presets[activePreset]) ? TOOLS.tone.presets[activePreset].guide
-                                                                          : 'polished, courteous and professional';
-        return 'OFFLINE REVISION · Tone Shifter\n\nOriginal:\n"'+truncate(t,400)+'"\n\nRefined version ('+g2+'):\n\n'+
-               '• Lead with the core message clearly and politely.\n'+
-               '• Replace abrupt phrasing with courteous, confident wording.\n'+
-               '• Preserve every key fact from the original.\n'+
-               '• Close on an appreciative, forward-looking note.\n\n'+
-               'Polished rewrite:\nThank you for sharing this with me — your point comes across clearly, and I have rephrased it below in a '+
-               'warm and professional manner while keeping every important detail intact. "'+truncate(t,120)+'"';
-      }
-      var g3 = (activePreset!==null && TOOLS.summary.presets[activePreset]) ? TOOLS.summary.presets[activePreset].guide
-                                                                           : 'a 3-line key-point summary';
-      var words = t.split(/\s+/);
+      var src = (text||'').trim();
+      var topic = truncate(src, 80);
+      var words = src.split(/\s+/);
       var sample = '';
       for(var w=0; w<words.length && w<12; w++){ if(words[w]) sample += (sample?' ':'') + words[w]; }
-      return 'OFFLINE SUMMARY · Smart Summarizer\n\nRequested format: '+g3+'\n\n'+
-             'Key points:\n• '+(topic || '(no input detected)')+'\n'+
-             '• Core subject introduced: "'+sample+'"\n'+
-             '• Central idea: convey the main message clearly without the reader needing the full source.\n\n'+
-             'Plain-language overview:\n'+truncate(t,240);
+      var key = (tab==='tone') ? 'fallback.tone' : (tab==='builder' ? 'fallback.builder' : 'fallback.summary');
+      if(window.I18N && typeof window.I18N.tn === 'function'){
+        return window.I18N.tn(key, {
+          topic: topic,
+          src: truncate(src, 140),
+          src150: truncate(src, 150),
+          src240: truncate(src, 240),
+          sample: sample
+        });
+      }
+      // Defensive inline fallback if the i18n module was never loaded.
+      return 'Result appears here.';
     }
 
     // ══ Mood-art canvas: draws a live animation derived from the result text
@@ -446,7 +433,7 @@
       if(art.running){ drawArtFrame(performance.now()); }
     }
     function renderMoodArt(){
-      if(!lastOutput){ toast('Generate a result first, then render the mood art.'); return; }
+      if(!lastOutput){ toast(t('art.first')); return; }
       art.seed=hashStr(lastOutput||'mood');
       artEl();
       art.running=true;
@@ -454,25 +441,25 @@
       var png=document.getElementById('pngBtn'), webm=document.getElementById('webmBtn');
       if(png){ png.disabled=false; } if(webm){ webm.disabled=false; }
       artShow(true);
-      toast('Mood art rendered below.');
+      toast(t('art.rendered'));
     }
     function saveCardPNG(){
-      var c=artEl(); if(!c || !lastOutput){ toast('Render the mood art first.'); return; }
+      var c=artEl(); if(!c || !lastOutput){ toast(t('art.first')); return; }
       drawArtFrame(performance.now(), art.seed);
       var done=false;
       var download = function(url, name){
         var a=document.createElement('a'); a.href=url; a.download=name;
         document.body.appendChild(a); a.click();
         setTimeout(function(){ a.remove(); if(URL.revokeObjectURL){ URL.revokeObjectURL(url); } },400);
-        toast('PNG card downloaded.');
+        toast(t('art.pngDownloaded'));
       };
       try{
         // Chrome: toBlob(callback, type) delivers the Blob to a callback.
         if(typeof c.toBlob==='function'){
           c.toBlob(function(blob){
-            if(!blob){ toast('PNG export failed.'); return; }
+            if(!blob){ toast(t('art.pngFail')); return; }
             try{ download(URL.createObjectURL(blob), 'moodutools-card.png'); }
-            catch(e){ console.error('[MooduTools] PNG export failed:', e); toast('PNG export failed.'); }
+            catch(e){ console.error('[MooduTools] PNG export failed:', e); toast(t('art.pngFail')); }
           }, 'image/png');
           done=true;
         } else if(typeof c.toDataURL==='function'){
@@ -480,7 +467,7 @@
           done=true;
         }
       }catch(e){ console.error('[MooduTools] PNG export failed:', e); }
-      if(!done){ toast('PNG export unavailable in this browser.'); }
+      if(!done){ toast(t('art.pngUnsupported')); }
     }
     function finishWebM(){
       try{
@@ -489,15 +476,15 @@
         var a=document.createElement('a'); a.href=url; a.download='moodutools-clip.webm';
         document.body.appendChild(a); a.click();
         setTimeout(function(){ a.remove(); if(URL.revokeObjectURL){ URL.revokeObjectURL(url); } },400);
-        toast('WebM clip downloaded.');
+        toast(t('art.webmDownloaded'));
       }catch(e){
         console.error('[MooduTools] WebM export failed:', e);
-        toast('WebM clip export failed — PNG card still works.');
+        toast(t('art.webmFail'));
       }
       art.rec=null; art.recChunks=[];
     }
     async function recordWebM(){
-      var c=artEl(); if(!c || !lastOutput){ toast('Generate a result and render the mood art first.'); return; }
+      var c=artEl(); if(!c || !lastOutput){ toast(t('art.first')); return; }
       if(!art.running){ renderMoodArt(); }
       // Obtain a MediaStream from the canvas via whichever API Chrome exposes.
       var stream=null;
@@ -509,7 +496,7 @@
         }
       }catch(e){ stream=null; console.error('[MooduTools] canvas stream failed:', e); }
       if(!stream){
-        toast('WebM clip needs a newer Chrome with canvas recording — PNG card still works.');
+        toast(t('art.webmUnsupported'));
         return;
       }
       var rec;
@@ -523,7 +510,7 @@
       rec.addEventListener('stop', function(){ finishWebM(); });
       try{ rec.start(100); }
       catch(e){ toast('Could not start recording: '+e.message); art.rec=null; return; }
-      toast('Recording mood clip (~4s)…');
+      toast(t('art.recording'));
       setTimeout(function(){ try{ rec.stop(); }catch(e){} }, 4000);
     }
 
@@ -577,6 +564,10 @@
     var activeTab = 'builder';
     var activePreset = null;
     var lastOutput = '';
+
+    // ══ Locale helpers (backed by js/i18n.js) ══
+    function t(key){ return (window.I18N && typeof window.I18N.t === 'function') ? window.I18N.t(key) : key; }
+    function currentLang(){ return (window.I18N && typeof window.I18N.getLang === 'function') ? window.I18N.getLang() : 'en'; }
     function setBusy(){ runBtn.disabled = true; inputText.disabled = true; copyBtn.disabled = true; shareBtn.disabled = true; }
     function setIdle(){ runBtn.disabled = false; inputText.disabled = false; copyBtn.disabled = !lastOutput; shareBtn.disabled = !lastOutput; }
 
@@ -599,7 +590,7 @@
         var b = document.createElement('button');
         b.type = 'button';
         b.className = 'chip' + (activePreset === i ? ' active' : '');
-        b.textContent = p.label;
+        b.textContent = t('tool.'+activeTab+'.preset.'+i+'.label');
         b.addEventListener('click', function(){
           activePreset = (activePreset === i ? null : i);
           renderChips();
@@ -613,8 +604,8 @@
       outputBox.classList.add('placeholder');
       copyBtn.disabled = true; shareBtn.disabled = true; copyTip.textContent = '';
       inputText.value = '';
-      inputText.placeholder = TOOLS[tab].placeholder;
-      runHint.textContent = TOOLS[tab].hint;
+      inputText.placeholder = t('tool.'+tab+'.placeholder');
+      runHint.textContent = t('tool.'+tab+'.hint');
       Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
         t.classList.toggle('active', t.getAttribute('data-tab') === tab);
       });
@@ -628,17 +619,21 @@
     function buildSystemPrompt(){
       var base = TOOLS[activeTab].systemPrompt;
       if(activePreset !== null){ base += '\n[Preset applied] ' + TOOLS[activeTab].presets[activePreset].guide; }
+      // Locale-aware instruction: pin the model's output language to the UI language.
+      base += (currentLang() === 'ko')
+        ? '\n[Language] The user interface is set to Korean. Respond entirely in Korean (한국어). Output only Korean text.'
+        : '\n[Language] The user interface is set to English. Respond entirely in English. Output only English text.';
       return base;
     }
 
     // ══ Run: stream from the WebGPU model (or offline fallback), always recovers UI ══
     async function run(){
       var text = inputText.value.trim();
-      if(!text){ toast('Please enter some text first.'); inputText.focus(); return; }
+      if(!text){ toast(t('toast.enterText')); inputText.focus(); return; }
 
       setBusy();
-      var cue = ENGINE.fallback ? 'Offline synthesis…'
-                                : 'Starting the on-device model… (first run downloads one-time weights)';
+      var cue = ENGINE.fallback ? t('engine.offlineStarting')
+                                : t('engine.starting');
       runHint.textContent = cue;
       showEngineBar(true);
       preload(); // idempotent background warm-up
@@ -649,8 +644,8 @@
       outputBox.textContent = lastOutput;
       copyBtn.disabled = false;
       shareBtn.disabled = false;
-      runHint.textContent = ENGINE.fallback ? 'Done · offline mood engine.'
-                                            : 'Done · on-device WebGPU model.';
+      runHint.textContent = ENGINE.fallback ? t('engine.doneOffline')
+                                            : t('engine.doneWeb');
       setIdle();
       showEngineBar(false);
     }
@@ -658,11 +653,11 @@
     function copyOut(){
       if(!lastOutput) return;
       var done = function(){
-        copyBtn.textContent = '✓ Copied!';
+        copyBtn.textContent = t('toast.copied');
         copyBtn.classList.add('copied');
-        copyTip.textContent = 'Copied! ✓';
+        copyTip.textContent = t('toast.copied');
         setTimeout(function(){
-          copyBtn.textContent = '📋 Copy';
+          copyBtn.textContent = t('common.copy');
           copyBtn.classList.remove('copied');
           copyTip.textContent = '';
         }, 2000);
@@ -672,8 +667,8 @@
     }
     // ══ Share on X: build intent URL with the branded viral line + output snippet ══
     function shareToX(){
-      if(!lastOutput){ toast('There is no result to share yet. Please generate something first.'); return; }
-      var base = 'I polished my text with 100% private on-device AI ✨ moodutools.com #MooduTools';
+      if(!lastOutput){ toast(t('toast.shareEmpty')); return; }
+      var base = t('share.base');
       var snippet = lastOutput.replace(/\s+/g, ' ').trim();
       if(snippet.length > 120){ snippet = snippet.slice(0, 120) + '…'; }
       var text = base + '\n\n' + snippet;
@@ -704,6 +699,14 @@
     // Begin a background model warm-up the moment the page loads.
     showEngineBar(false);
     preload();
+
+    // Re-render tool chrome (placeholders, hints, chips) whenever the
+    // language switch changes — no refresh required.
+    document.addEventListener('i18n:changed', function(){
+      switchTab(activeTab);
+      if(ENGINE.fallback){ engineChip(t('engine.offline'), 'fallback'); }
+      else if(ENGINE.engine){ engineChip(t('engine.ready'), 'ready'); }
+    });
 
     switchTab('builder');
   })();
