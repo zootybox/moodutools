@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Docs — MooduTools Engineering &amp; On-Device AI Architecture</title>
-  <meta name="description" content="The MooduTools engineering documentation hub: deep technical explorations of zero-cost on-device AI, 100% local privacy, and the generative CSS art pipeline powered by Chrome's built-in Gemini Nano.">
+  <meta name="description" content="The MooduTools engineering documentation hub: deep technical explorations of zero-cost on-device AI, 100% local privacy, and the generative CSS art pipeline powered by an in-browser WebGPU LLM (WebLLM).">
   <link rel="canonical" href="https://moodutools.com/docs/index.html">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,7 +109,7 @@
     <section class="hero">
       <span class="badge">&#128214; Engineering &amp; On-Device AI Documentation</span>
       <h1>MooduTools <span class="grad">Engineering &amp; On-Device AI</span> Docs</h1>
-      <p>Technical deep-dives into how MooduTools runs a full generative AI product with zero server infrastructure, absolute on-device privacy, and Chrome's built-in Gemini Nano &mdash; turning typed emotions into living HTML/CSS art.</p>
+      <p>Technical deep-dives into how MooduTools runs a full generative AI product with zero server infrastructure, absolute on-device privacy, and an in-browser WebGPU LLM (WebLLM) &mdash; turning typed emotions into living HTML/CSS art.</p>
     </section>
 
     <section class="pillars">
@@ -125,8 +125,8 @@
       </article>
       <article class="pillar">
         <div class="ico">&#128241;</div>
-        <h3>Chrome Built-in AI</h3>
-        <p>Gemini Nano ships inside Chrome. A small, purpose-built language model is available without any backend, sign-up, or embedding cost through the window.ai API.</p>
+        <h3>In-Browser WebGPU</h3>
+        <p>A lightweight LLM (WebLLM) is loaded over a CDN and runs on your device's GPU. No backend, no sign-up, no Chrome flags &mdash; and it works in any WebGPU-capable browser.</p>
       </article>
     </section>
 
@@ -139,7 +139,7 @@
         <a class="doc-card" href="/docs/zero-cost-on-device-architecture.html">
           <span class="tag">Architecture &middot; Privacy</span>
           <h3>Zero-Cost Infrastructure: Running AI Completely in Client Browsers</h3>
-          <p>How Cloudflare Pages static hosting and the Chrome Gemini Nano local prompt API combine into a production architecture with zero egress, zero server cost, and absolute emotional-data privacy.</p>
+          <p>How Cloudflare Pages static hosting and an in-browser WebGPU LLM (WebLLM) combine into a production architecture with zero egress, zero server cost, and absolute emotional-data privacy.</p>
           <div class="meta"><span><b>12+</b> min read</span><span class="go">Read document &rarr;</span></div>
         </a>
         <a class="doc-card" href="/docs/generative-css-art-engine.html">
@@ -155,7 +155,7 @@
       <h2>How the Magic Happens</h2>
       <div class="pipe-steps">
         <div class="pipe-step"><b>Mood in</b><span>You type a feeling; it is tokenized on-device and pinned to a strict system prompt.</span></div>
-        <div class="pipe-step"><b>Local inference</b><span>Gemini Nano runs in Chrome and returns a raw HTML/CSS fragment only.</span></div>
+        <div class="pipe-step"><b>Local inference</b><span>A lightweight WebGPU LLM runs on your device and returns a raw HTML/CSS fragment only.</span></div>
         <div class="pipe-step"><b>Sanitize</b><span>A pass removes scripts and non-renderable prose before anything touches the DOM.</span></div>
         <div class="pipe-step"><b>Animate</b><span>The fragment is injected; CSS keyframes bring the art to life entirely in the browser.</span></div>
       </div>

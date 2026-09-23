@@ -1,0 +1,50 @@
+=========================================================
+ MooduTools — Project Overview
+ Private, serverless, in-browser AI text & mood tools
+=========================================================
+
+[Core Concept]
+MooduTools is a fully client-side generative product. A lightweight
+instruction-tuned LLM runs entirely inside the visitor's browser on the
+device's GPU via the WebGPU standard — there is NO backend server, NO
+inference API key, and NO network egress of user mood or text data.
+
+The entire intelligence payload (prompt builder, tone shifter, smart
+summarizer) is executed on-device:
+
+  - Zero server compute / zero marginal inference cost ($0 at any scale)
+  - Zero data egress: input text never leaves the machine
+  - Zero setup: no install, no Chrome flags, no account
+  - Cross-browser: works in any WebGPU-capable browser
+  - Always-works fallback: offline mood synthesis for non-WebGPU devices
+
+[Technical Stack]
+  - Static hosting : Cloudflare Pages (free edge delivery only)
+  - Engine runtime : WebLLM (@mlc-ai/web-llm), served via CDN
+                       https://esm.run/@mlc-ai/web-llm@0.2.85
+  - Model          : Qwen2.5-0.5B-Instruct-q4f16_1-MLC (lightweight, low-resource)
+  - Weight caching : browser Cache API  (prebuiltAppConfig.cacheBackend = "cache")
+                       model weights downloaded once, reused on later visits
+  - Load progress  : initProgressCallback -> animated progress bar (0–100%)
+  - Streaming      : engine.chat.completions.create({ stream:true }) -> event bus
+  - Rendering      : HTML5/CSS art canvas (PNG card + WebM clip export)
+  - Fallback       : deterministic offline mood engine (templates + text mixers)
+
+[Current Critical Issue]
+STATUS : WebLLM MIGRATION COMPLETE
+
+The previous Chrome Built-in Prompt API (window.ai / Gemini Nano)
+dependency has been fully removed. The known `Promise <pending>` bug and
+the Chrome model-factory debugging strategy are RESOLVED and no longer
+apply — model init is now handled by the WebLLM CreateMLCEngine path with
+a progress callback and an automatic offline fallback.
+
+Next goals (backlog):
+  1. Test support for more lightweight models (e.g. SmolLM2-135M / 360M)
+     and add a runtime model-selection that prefers whatever fits VRAM.
+  2. Build a device-capability matrix for WebGPU across Chrome / Firefox /
+     Edge / Safari to widen the no-fallback share of users.
+  3. Add a "model ready / cached" indicator and Cache API eviction controls
+     to the UI.
+  4. Continue hardening the offline mood engine ahead of any cloud inference.
+=========================================================

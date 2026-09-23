@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zero-Cost Infrastructure: Running AI Completely in Client Browsers — MooduTools Docs</title>
-  <meta name="description" content="A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus Chrome Gemini Nano local prompt API, delivering zero server cost, zero network egress, and absolute emotional-data privacy.">
+  <meta name="description" content="A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus an in-browser WebGPU LLM (WebLLM), delivering zero server cost, zero network egress, and absolute emotional-data privacy.">
   <link rel="canonical" href="https://moodutools.com/docs/zero-cost-on-device-architecture.html">
   <script type="application/ld+json">
   {
@@ -15,7 +15,7 @@
         "headline": "Zero-Cost Infrastructure: Running AI Completely in Client Browsers",
         "name": "Zero-Cost Infrastructure: Running AI Completely in Client Browsers",
         "url": "https://moodutools.com/docs/zero-cost-on-device-architecture.html",
-        "description": "A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus Chrome Gemini Nano local prompt API, delivering zero server cost, zero network egress, and absolute emotional-data privacy.",
+        "description": "A deep engineering document on MooduTools' architecture: Cloudflare Pages static hosting plus an in-browser WebGPU LLM (WebLLM), delivering zero server cost, zero network egress, and absolute emotional-data privacy.",
         "inLanguage": "en-US",
         "datePublished": "2026-09-22",
         "dateModified": "2026-09-22",
@@ -127,7 +127,7 @@
 
       <div class="article">
         <h1>Zero-Cost Infrastructure: Running AI Completely in Client Browsers</h1>
-        <p class="sub">How Cloudflare Pages static hosting and Chrome's Gemini Nano local prompt API combine into a fully serverless generative-AI product with zero egress and absolute privacy.</p>
+        <p class="sub">How Cloudflare Pages static hosting and an in-browser WebGPU LLM (WebLLM) combine into a fully serverless generative-AI product with zero egress and absolute privacy.</p>
         <div class="meta">
           <span>Category: <b>Architecture &amp; Privacy</b></span>
           <span>Reading time: <b>~12 min</b></span>
@@ -136,7 +136,7 @@
 
         <h2 id="overview">1. Overview</h2>
         <p>Modern consumer AI products are almost universally built on a familiar but expensive pattern: an API gateway in front of an inference service, a queuing layer, GPU autoscaling, observability, and a billing loop. That model delivers extraordinary power, but it also delivers a per-request marginal cost that grows with success, and it concentrates every user's data in a server-side datastore. MooduTools was designed from the first line of code to invert that paradigm.</p>
-        <p>This document walks through the architecture that lets MooduTools operate as a generative product with <b>zero persistent compute</b>, <b>zero model-inference cost</b>, and <b>zero network egress of user mood data</b>. The entire intelligence payload &mdash; the model that turns words into moving art &mdash; is executed not on a rented GPU in a faraway region, but inside the visitor's own Chrome process via the <code>window.ai</code> API and the built-in Gemini Nano model.</p>
+        <p>This document walks through the architecture that lets MooduTools operate as a generative product with <b>zero persistent compute</b>, <b>zero model-inference cost</b>, and <b>zero network egress of user mood data</b>. The entire intelligence payload &mdash; the model that turns words into moving art &mdash; is executed not on a rented GPU in a faraway region, but inside the visitor's own browser GPU via the WebLLM runtime, which loads a lightweight instruction-tuned model (Qwen2.5-0.5B-Instruct) over a CDN (<code>esm.run</code>) with no server, no API key, and no Chrome flag.</p>
         <div class="callout"><b>Key number:</b> The operational cost difference between hosting one user and hosting one million users is effectively zero. The only moving part with any real budget is static file delivery, which is absorbed by a free static-hosting edge.</div>
 
         <h2 id="why">2. Why Traditional AI Cloud Infrastructure Feels Heavy</h2>
@@ -146,43 +146,49 @@
         <p>The only piece of the product that is actually hosted is the code itself. Cloudflare Pages serves the HTML, CSS, and JavaScript from its global edge network with a free tier and generous traffic allowance. Because every file is immutable and content-addressed on deployment, caching behavior is deterministic: the edge and the browser both cache aggressively, so repeat visits often cost nothing more than a round trip to the nearest edge node.</p>
         <p>From a cost-accounting perspective, Pages is ideal because it bills on delivery, not compute. There is no always-on virtual machine and no concurrency ceiling tied to inference. The deployment pipeline is a simple <code>git push</code> that triggers a build, which in practice means a one-developer project can ship production features with the same discipline as a large organization's CD pipeline, but without a single cloud bill line item for model usage.</p>
         <p>It is important to separate two concerns that many products conflate: <b>caching the static shell</b> and <b>serving live compute</b>. MooduTools uses the edge only for the former. The latter &mdash; token generation &mdash; never touches the edge at all. That division is the entire financial and privacy thesis of the system.</p>
-<h2 id="runtime">4. The Runtime AI Layer (Chrome Gemini Nano &amp; <code>window.ai</code>)</h2>
-        <p>The second half of the architecture is a runtime that Chrome now ships by default for eligible devices. Gemini Nano is a compact instruction-tuned language model bundled into the browser itself. When present, it is exposed through an asynchronous factory API. A robust integration probes the compatibility surface before ever awaiting a promise:</p>
-        <pre>// Compatibility layer — every factory is checked before use.
-const g = window.ai || globalThis.ai || null;
-let session = null;
+<h2 id="runtime">4. The Runtime AI Layer (In-Browser WebGPU LLM &mdash; WebLLM)</h2>
+        <p>The second half of the architecture is a runtime that runs entirely inside the visitor's browser. The <code>@mlc-ai/web-llm</code> engine is pulled straight from a CDN (<code>esm.run</code>) with no build step, and it downloads a lightweight instruction-tuned model (we ship <b>Qwen2.5-0.5B-Instruct</b>) whose weights are stored once in the browser's Cache API and reused on every later visit. The model's forward pass runs on the device GPU through the WebGPU standard &mdash; no backend, no API key, no Chrome flag, and no browser-vendor lock-in:</p>
+        <pre>// Zero-setup, cross-browser WebGPU engine — no build, no key, no flag.
+const webllm = await import("https://esm.run/@mlc-ai/web-llm");
 
-if (g?.languageModel?.create) {
-  session = await g.languageModel.create({ systemPrompts: [SYSTEM_PROMPT] });
-} else if (g?.createTextSession) {
-  session = await g.createTextSession({ systemPrompt: SYSTEM_PROMPT });
-} else if (g?.createSession) {
-  session = await g.createSession({ systemPrompts: [SYSTEM_PROMPT] });
+// Persist model weights in the browser Cache API (download once).
+webllm.prebuiltAppConfig.cacheBackend = "cache";
+
+const engine = await webllm.CreateMLCEngine(
+  "Qwen2.5-0.5B-Instruct-q4f16_1-MLC",
+  { initProgressCallback: (report) => setProgress(report.progress, report.text) }
+);
+
+for await (const chunk of engine.chat.completions.create({
+  stream: true,
+  messages: [
+    { role: "system", content: SYSTEM_PROMPT },
+    { role: "user",   content: MOOD_TEXT },
+  ],
+})) {
+  stream(chunk.choices[0].delta.content);
 }</pre>
-        <p>Location is meaningful. Because the model runs in the rendering process, a prompt executes with millisecond-level network latency, at zero token cost, and under the browser's <code>origin</code> security boundary. There is no API key, no egress firewall exception, and no server it can reach even if a prompt were maliciously crafted. This is fundamentally different from a thin-client chat product: here the weight, the reasoning, and the output all live where the user already is.</p>
+        <p>Location is meaningful. Because the model runs on the visitor's own GPU within the browser, a prompt executes with inference happening with zero network round-trip, at zero token cost, and under the browser's <code>origin</code> security boundary. There is no API key, no egress firewall exception, and no server it can reach even if a prompt were maliciously crafted. This is fundamentally different from a thin-client chat product: here the weight, the reasoning, and the output all live where the user already is. And because the runtime is a portable WebGPU engine rather than a browser-bundled model, it works across any WebGPU-capable browser &mdash; zero setup, cross-browser by design.</p>
         <h2 id="privacy">5. The Zero-Egress Privacy Guarantee</h2>
         <p>Privacy claims in software are only meaningful when they can be reduced to facts about packets. MooduTools' guarantee rest on a verifiable property: <b>a user's mood text and the generated artwork never appear in a network frame.</b> Let us trace the packet inventory for a complete generation cycle.</p>
         <ul>
           <li><b>Document load.</b> The browser fetches HTML, CSS, JS, and fonts over HTTPS. This is identical to visiting any documentation page.</li>
           <li><b>Prompt construction.</b> The typed mood is concatenated into a system prompt string in memory. No AJAX, no WebSocket, no fetch. The strings exist only in the page's JavaScript heap.</li>
-          <li><b>Inference.</b> <code>session.prompt()</code> is resolved entirely by the local model. No network request is initiated by the call.</li>
+          <li><b>Inference.</b> Each token is resolved entirely by the local WebGPU model. No network request is initiated by the call.</li>
           <li><b>Rendering.</b> The returned HTML fragment is sanitized and injected into the DOM. Everything renders within the same origin.</li>
         </ul>
         <div class="callout"><b>Zero egress:</b> precisely because no <code>fetch()</code>, <code>XMLHttpRequest</code>, or WebSocket is ever invoked with user content, there is no packet to intercept, no server log to subpoena, and no third-party SDK to leak through. The guarantee is structural, not aspirational.</div>
         <p>This is where the architecture earns its privacy language in a way that a server-side product cannot. A remote LLM provider can promise encryption in transit and at rest, but those promises still route the plaintext through a party that is not the user. On-device inference removes the third party from the threat model by removing the transmission itself.</p>
 
-        <h2 id="lifecycle">6. Session Lifecycle &amp; Fallbacks</h2>
-        <p>Because products must degrade gracefully, the integration distinguishes between "no AI", "AI present but model not yet downloaded", and "AI present and ready." The code checks capability, then establishes a session with a bounded-timeout guard so that a stalled async promise can never hold the UI hostage:</p>
-        <pre>function withTimeout(promise, ms, label) {
-  return new Promise((resolve, reject) => {
-    const t = setTimeout(() =>
-      reject(new Error(`TIMEOUT [${label}] after ${ms}ms`)), ms);
-    promise.then(v => (clearTimeout(t), resolve(v)),
-                 e => (clearTimeout(t), reject(e)));
-  });
-}
-session = await withTimeout(createAISession(), 6000, 'session-create');</pre>
-        <p>When the runtime is absent, the product falls back to hand-curated <code>&ldquo;Live Demo&rdquo;</code> presets &mdash; deterministic CSS compositions that showcase the same rendering engine without the model. The user never sees a dead button; they see a graceful, explained transition between local-intelligence and curated-intelligence modes. This fallback is not an afterthought, but a core part of the architecture, because it keeps the surface trustworthy even on browsers that predate Gemini Nano.</p>
+        <h2 id="lifecycle">6. Lifecycle, Progress &amp; Fallbacks</h2>
+        <p>Because products must degrade gracefully, the integration distinguishes between "no WebGPU", "model weights not yet downloaded", and "model ready." The engine exposes an initialization callback so the UI can show a friendly, animated download bar instead of a frozen button:</p>
+        <pre>const engine = await webllm.CreateMLCEngine(modelId, {
+  initProgressCallback: (report) => {
+    // report.progress ∈ [0,1]; report.text is a human-readable stage label.
+    progressBar.style.width = `${Math.round(report.progress * 100)}%`;
+  },
+});</pre>
+        <p>When WebGPU is unavailable on the visitor's machine, or when the model cannot be started, the product falls back to a deterministic offline mood engine &mdash; small hand-authored templates and text mixers that run the same tools with no model download. The user never sees a dead button; they see a graceful, explained transition between on-device-intelligence and offline modes. This fallback is not an afterthought, but a core part of the architecture, because it keeps the surface trustworthy and 100% functional even on browsers without WebGPU.</p>
         <h2 id="cost">7. The Cost Model: From One User to a Million</h2>
         <p>Consider a conventional hosted AI product: at a modest token price and reasonable prompt length, 100,000 monthly active users might generate tens of thousands of dollars in inference spend. Add GPU autoscaling overhead and cold-start latency, and the unit economics quietly decide what features a small team can offer. MooduTools has a structurally different ledger.</p>
         <ul>
@@ -201,8 +207,8 @@ session = await withTimeout(createAISession(), 6000, 'session-create');</pre>
         </ul>
         <blockquote>A remote model provider could still, in principle, be compelled to log prompts. An on-device model removes that class of risk at the root: there is no remote provider holding plaintext, because there is no transmission.</blockquote>
         <h2 id="conclusion">9. Conclusion</h2>
-        <p>MooduTools is evidence that a generative product does not have to rent intelligence. By serving static code from a free edge and letting Chrome's embedded Gemini Nano do the reasoning inside the visitor's own process, the architecture achieves what most AI startups measure but cannot honestly claim: <b>zero marginal inference cost and zero egress of user emotions.</b></p>
-        <p>The trade-off is a dependency on browser capability distribution. Not every visitor's machine has Gemini Nano yet, so the product ships a curated fallback and a clear compatibility path. But for the growing population that does have it, the experience is indistinguishable from a hosted product with the privateness of a locally installed application. That inversion &mdash; where the most private option is also the most cost-effective option &mdash; is the quiet revolution this architecture represents.</p>
+        <p>MooduTools is evidence that a generative product does not have to rent intelligence. By serving static code from a free edge and letting a lightweight WebGPU LLM (WebLLM) do the reasoning inside the visitor's own browser, the architecture achieves what most AI startups measure but cannot honestly claim: <b>zero marginal inference cost and zero egress of user emotions.</b></p>
+        <p>The trade-off is a dependency on browser capability distribution. Not every visitor's machine exposes a WebGPU adapter yet, so the product ships a deterministic offline fallback and keeps the interface identical in every environment. But for the growing population of WebGPU-capable browsers, the experience is indistinguishable from a hosted product with the privateness of a locally installed application. That inversion &mdash; where the most private option is also the most cost-effective option &mdash; is the quiet revolution this architecture represents.</p>
         <p>Continue to the companion deep-dive to see how the raw text returned by the local model is turned into living, interactive HTML/CSS animation: <a href="/docs/generative-css-art-engine.html" style="color:var(--accent)">From Text to Canvas: The Generative CSS Animation Pipeline</a>.</p>
       </div>
     </div>

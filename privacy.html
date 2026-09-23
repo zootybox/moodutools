@@ -92,7 +92,7 @@
         <div class="callout zero" id="tl-dr"><b>TL;DR &mdash; Zero Data Egress.</b> Your text and prompts are processed entirely in your browser and are <strong>never</strong> transmitted to our servers, stored by us, or shared with anyone. We have nothing to collect, nothing to log, and nothing to leak.</div>
 
         <h2 id="zero-egress">Zero Data Egress</h2>
-        <p>MooduTools generates its text output with the browser's built-in AI (Chrome Gemini Nano), which executes locally on <strong>your device</strong>. When you type or paste text, your prompt travels from the page to your own browser's model on the same machine &mdash; it does not cross the network, reach our servers, or touch any third party. Text processing is deliberately confined to your hardware: no packet, no server log, no external callback.</p>
+        <p>MooduTools generates its text output with a lightweight in-browser LLM (WebLLM) that executes locally on your device's graphics processor (GPU) through the WebGPU standard. On your first visit, the browser downloads the small model weights once and stores them <strong>locally in your browser's Cache API</strong>; on later visits nothing is re-downloaded. When you type or paste text, your prompt travels from the page straight to the model running on your own machine &mdash; it does not cross the network, reach our servers, or touch any third party. Text processing is deliberately confined to your hardware: no packet, no server log, no external callback. Your words are never transmitted; the only network request is the one-time fetch of the public, reusable model weights from a CDN (esm.run).</p>
         <p>This policy describes how we operate even where standard web technologies (cookies or third-party tools) may be present, and the rights you have under data-protection law.</p>
 <h2 id="not-collected">What We Do Not Collect</h2>
         <p>We do not store, transmit, or otherwise process:</p>
@@ -124,7 +124,7 @@
         <p>To exercise any of these rights, or to learn which of our advertising partners process identifiers, contact us at <a href="mailto:support@moodutools.com">support@moodutools.com</a>. We will respond within the legally required timeframe and never penalize you for exercising your rights.</p>
 
         <h2 id="security">Data Security</h2>
-        <p>Because your text and output never leave your device, the strongest guarantee we can offer is simple: there is no stored data to be exposed. Any locally cached pages or settings can be cleared through your browser's privacy controls. Where third-party ad networks operate, we rely on their contractual and technical obligations, and we minimize our own processing accordingly.</p>
+        <p>Because your text and output never leave your device, the strongest guarantee we can offer is simple: there is no stored data to be exposed. The model weights cached in your browser's Cache API, along with any locally cached pages or settings, can be cleared at any time through your browser's privacy or cache controls; doing so only triggers a one-time re-download on the next use. Where third-party ad networks operate, we rely on their contractual and technical obligations, and we minimize our own processing accordingly.</p>
 
         <h2 id="changes">Changes to This Policy</h2>
         <p>We may update this Privacy Policy from time to time. Changes will be posted here with an updated "Last updated" date. Continued use of the site after changes constitutes acceptance of the updated policy.</p>
